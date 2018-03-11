@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import './Button.css';
+import '../Styles/Button.css';
 
 
 
@@ -8,13 +8,13 @@ class Button extends React.Component {
     constructor(props){
       super(props);
       this.ButtonBack=styled.a`
-      background-image:url(${props.imageSource});
+        background-image:url(${props.imageSource});
       `
       this.content=props.content;
     }
     render() {
         return (
-            <li><this.ButtonBack className="round green"><span class="round">{this.content}</span></this.ButtonBack></li>
+            <li><this.ButtonBack className="round green"><span className="round">{this.content}</span></this.ButtonBack></li>
         )
       }
 }

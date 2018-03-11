@@ -1,0 +1,85 @@
+@keyframes popAnima{
+    0%   {
+      left:-100px;
+    }
+    100%   {
+      left:0px;
+    }
+}
+
+@keyframes radiusTag{
+    0%,100%{
+        width:15px;
+        height:15px;
+    }
+    50%   {
+        widows: 20px;
+        height:20px;
+    }
+}
+
+@keyframes rotated{
+    0%   {
+        transform: rotate(0deg);
+    }
+    100%   {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes buttonDrop{
+    0%   {
+        background-color:#28a745;
+    }
+    100%   {
+        background-color:#155e26;
+    }
+}
+
+@keyframes pulse{
+  0%   {
+        width:50px;
+        border-radius: 0;
+        transform: rotate(0deg);
+    }
+  50%   {
+        width:30px;
+        border-radius: 100%;
+        transform: rotate(90deg);
+    }
+  100% {
+        width:50px;
+        border-radius: 0;
+        transform: rotate(180deg);
+    }
+}
+
+.rotation{
+    animation: rotated 0.2s linear 0s 1 alternate;
+}
+.dropdown{
+    animation: buttonDrop 0.1s linear 0s 1 alternate;
+}
+
+.dropup{
+    animation: buttonDrop 0.1s linear 0s 1 reverse;
+}
+
+.enableTag{
+    animation: radiusTag 0.1s linear 0s 1 normal;
+}
+.unenableTag{
+    animation: radiusTag 0.1s linear 0s 1 reverse;
+}
+
+.popUp{
+    animation: popAnima 0.3s linear 0s 1 alternate;
+}
+
+.popOut{
+    animation: popAnima 0.3s linear 0s 1 reverse;
+}
+
+.anima{
+     animation: pulse 0.3s linear 0s 1 alternate;
+}

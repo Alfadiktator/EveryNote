@@ -1,18 +1,25 @@
 import React from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import styled from 'styled-components'
+import {Link} from 'react-router-dom';
 
 
 const Wrap1=styled.div`
-height:40vh;
-width:15vw;
-@media (min-width: 300px) {
-    width:300px;
+position:absolute;
+height:auto;
+width:400px;
+@media (max-width: 600px) {
+  width:100%;
+  left:0;
 }
-border:2px solid black;
-left:70vw;
+@media (max-height: 700px) {
+  height:350px;
+  top:300px;
+  margin-bottom:10px;
+}
+box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
+left:calc(95% - 400px);
 top:40vh;
-position: absolute;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -23,7 +30,13 @@ z-index:50;
 const Wrap2=styled.div`
 height:100%;
 width:100%;
-padding-bottom:2%;
+padding:5%;
+@media (max-height: 700px) {
+  height:100%;
+  width:100%;
+  padding:5%;
+  padding-top:25px;
+}
 `
 const Logo=styled.div`
 width:20%;
@@ -39,13 +52,16 @@ const Centrer=styled.div`
   justify-content: left;
 `
 const LabelReg=styled.div`
-  background-color:rgb(0, 121, 30);
   margin-bottom:2vh;
-  color:#fff;
-  font-size:2em;
-  font-weight:bold;
+  color:#000;
+  font-size:30px;
+  font-weight:500;
   border-radius:3px;
+  @media (max-height: 700px) {
+    display:none;
+  }
   `
+
 
 class Registration extends React.Component {
   constructor(props){
@@ -64,7 +80,7 @@ class Registration extends React.Component {
         </FormGroup>
         <FormGroup>
           <Label for="Lastname" hidden>Last name</Label>
-          <Input type="text" name="Second name" id="2Name" placeholder="Second Name" value="dfvfdv@dfvdfv.ru"/>
+          <Input height="100px" type="text" name="Second name" id="2Name" placeholder="Second Name" value="dfvfdv@dfvdfv.ru"/>
         </FormGroup>
         <FormGroup>
           <Label for="Email" hidden>Email</Label>
