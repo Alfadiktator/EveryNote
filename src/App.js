@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import {HashRouter as Router,Route,Switch} from 'react-router-dom';
 import ButtonMenu from './components/ButtonMenu';
 import {connect} from 'react-redux';
+import test from './Test';
 
 
 const Wraper=styled.div`
@@ -14,19 +15,18 @@ const Wraper=styled.div`
 
 class App extends Component {
 
- logOn=(email,pass)=>{
-    this.props.onLog(email,pass);
- }
+state={
+  redirect:false,
+}
 
  handleSubmit= (name,name2,email,pass,passconf) => {
-    var xhr = new XHR();
-    this.props.onRegistration({
+    let info={
       name:name,
       name2:name2,
       email:email,
       pass:pass,
       passconf:passconf,
-    })
+    }
    }
 
  ChangePassword=(newpass,pass,passconf) =>{
@@ -38,7 +38,7 @@ class App extends Component {
         <Wraper>
           <Router>
             <Switch>
-              <Route exact path="/" render={()=> <FrontPage onSubmit={this.handleSubmit} onLogOn={this.logOn}/>}/>
+              <Route exact path="/" render={()=> <FrontPage onSubmit={this.handleSubmit} onLogOn={this.props.onLogOn}/>}/>
               <Route  path="/user" render={() => <ButtonMenu data={this.state}/> }>
               </Route>
             </Switch>
@@ -50,14 +50,34 @@ class App extends Component {
 
 export default connect(
     state =>({
-      testStore:state
+      testStore:state,
     }),
     dispatch => ({
-      onLog:(email,pass)=>{
-        dispatch({type:'LOG_ON',payload:{email:email,password:pass}})
-      },
-      onRegistration:(info)=>{
-        dispatch({type:'REGISTRATION',payload:info})
+      onLogOn:(info)=>{
+        const asyncGetData= ()=>{
+          return (dispatch)=>{
+            let xhr=new XMLHttpRequest();
+            xhr.open('POST', '/api/account/logon', false);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(`email=${info.email}&password=${info.password}`);
+            xhr.onload((event)=>{
+              let datas=JSON.parse(xhr.responseText);
+              if(datas.success){
+                const {userProfileModel,data}=datas.extras;
+                const {notes,tags,folders}=data;
+                dispatch({type:'GET_USER_INFO',payload:userProfileModel});
+                dispatch({type:'UPDATE',payload:{notes,tags,folders}});
+                window.location.replace("#/user/Notes");
+              }
+            });
+            /*setTimeout(()=>{
+              let data={};
+              data=test;
+
+            },1000);*/
+          }
+        }
+        dispatch(asyncGetData());
       }
     })
 )(App);

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import GridBlock from './Tools/GridBlock';
 import CreateNode from './CreateNode';
 import {HashRouter as Router,Route,Switch,Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 const Wraper=styled.div`
     width:100%;
@@ -56,48 +57,44 @@ const WhiteSpace=styled.div`
     height:100px;
 `
 
-export default class Notes extends React.Component{
+class Notes extends React.Component{
     constructor(props){
         super(props);
-        this.className={};
-        this.notes=[{
-            label:"KsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxa",
-            desc:"voobshe taka9 vaflia shokeKsu aKsuxaK su xaKsu xaKsuxaKsuxaKs xaKsuxaKsuxa Ksuxa suxaKsux KsuxaK uxaKsu xaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxa",
-            tags:[{color:"red",text:"danger"},{color:"green",text:"good"}],
-            folder:"KSUXA",
-            date:new Date(),
-            name:"Ksuxa",
-        },{
-            label:"KsuxaKsuxaKsuxa",
-            desc:"voobshe taka9 xaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxa",
-            tags:[{color:"violet",text:"mad"},{color:"red",text:"danger"}],
-            folder:"KSUXA",
-            date:new Date(),
-            name:"Fad",
-        }];
     }
     render(){
         return (
         <Wraper>
             <GridPlace id="gridplace">
                 <Label>Notes</Label>
-                {this.notes.map((elem)=>{
+                {this.props.store.notes.map((elem)=>{
                     return <Link to={`/user/Notes/${elem.name}`}><GridBlock data={elem}/></Link>
                 })}
                 <WhiteSpace/>
             </GridPlace>
-            <Route path="/user/Notes/:tab" render={(props) =>{
-                    let {tab}=props.match.params;
-                    let place=document.getElementById("gridplace");
-                    if( place &&(window.innerWidth <= 500 || window.innerHeight <= 500)){
-                            place=document.getElementById("gridplace");
-                            
-                            place.style.display="none";
-                            
-                    }
-                    let elem=this.notes.find((elem)=>elem.name===tab);
-                    return <CreateNode data={elem}/>
-            }}/>
+            <Router>
+                <Route path="/user/Notes/:tab" render={(props) =>{
+                        let {tab}=props.match.params;
+                        let place=document.getElementById("gridplace");
+                        if( place &&(window.innerWidth <= 500 || window.innerHeight <= 500)){
+                                place=document.getElementById("gridplace");
+                                place.style.display="none";
+                        }
+                        let elem=this.props.store.notes.find((elem)=>elem.name===tab);
+                        this.props.onCurChange(elem);
+                        return <CreateNode data={elem}/>;
+                }}/>
+            </Router>
         </Wraper>)
     }
 }
+
+export default connect(
+    state =>({
+        store:state,
+      }),
+      dispatch => ({
+        onCurChange:(data)=>{
+            dispatch({type:'UPDATE_FOCUS_NOTES',payload:data});
+        }
+      }),
+)(Notes)

@@ -5,6 +5,7 @@ import NewTag from './Tools/NewTag';
 import './Styles/Animation.css';
 import {HashRouter as Router,Route,Switch,Link} from 'react-router-dom';
 import {Button} from 'reactstrap';
+import {connect} from 'react-redux';
 
 const Wraper=styled.div`
     width:100%;
@@ -136,32 +137,16 @@ const ButtonArea=styled.div`
     justify-self:end;
     aling-self:center;
 `
-
-export default class Tags extends React.Component{
+class Tags extends React.Component{
     constructor(props){
         super(props);
-        this.folders=[];
-        this.folders.push({name:"KSUXA"});
-        this.folders.push({name:"Qwerty"});
-        this.folders.push({name:"REGAL"});
-        this.notes=[{
-            label:"KsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxa",
-            desc:"voobshe taka9 vaflia shokeKsu aKsuxaK su xaKsu xaKsuxaKsuxaKs xaKsuxaKsuxa Ksuxa suxaKsux KsuxaK uxaKsu xaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxa",
-            tags:[{color:"red",text:"danger"},{color:"green",text:"good"}],
-            folder:"KSUXA",
-            date:new Date(),
-            name:"Ksuxa",
-        },{
-            label:"KsuxaKsuxaKsuxa",
-            desc:"voobshe taka9 xaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxa",
-            tags:[{color:"violet",text:"mad"},{color:"red",text:"danger"}],
-            folder:"REGAL",
-            date:new Date(),
-            name:"Fad",
-        }];
         this.state={
             dropfolder:false,
         }
+        let {tags,notes,folders}=this.props.store;
+        this.tags=tags;
+        this.notes=notes;
+        this.folders=folders;
         this.createFolder=this.createFolder.bind(this);
     }
     createFolder(){
@@ -190,20 +175,32 @@ export default class Tags extends React.Component{
                 })}
                 <WhiteSpace/>
             </GridPlace>
-            <Route path="/user/Folder/:tab" render={(props) =>{
-                    let {tab}=props.match.params;
-                    let place=document.getElementById("gridplace");
-                    if( place &&(window.innerWidth <= 500 || window.innerHeight <= 500)){
-                            place.style.display="none";
-                    }
-                    let arr=this.notes.filter((elem)=>elem.folder===tab);
-                    var matchgrid = document.getElementById("matchgrid");
-                    return (<MatchGrid id="matchgrid">
-                                {arr.map(elem=>{
-                                    return (<Link to={`/user/Notes/${elem.name}`}><GridBlock data={elem}/></Link>);
-                                })}
-                            </MatchGrid>)
-                    }}/>
+            <Router>
+                <Route path="/user/Folder/:tab" render={(props) =>{
+                        console.log('this',this);
+                        let {tab}=props.match.params;
+                        let place=document.getElementById("gridplace");
+                        if( place &&(window.innerWidth <= 500 || window.innerHeight <= 500)){
+                                place.style.display="none";
+                        }
+                        let arr=this.notes.filter((elem)=>elem.folder===tab);
+                        var matchgrid = document.getElementById("matchgrid");
+                        return (<MatchGrid id="matchgrid">
+                                    {arr.map(elem=>{
+                                        return (<Link to={`/user/Notes/${elem.name}`}><GridBlock data={elem}/></Link>);
+                                    })}
+                                </MatchGrid>)
+                        }}/>
+            </Router>
         </Wraper>)        
     }
 }
+
+export default connect(
+    state =>({
+        store:state,
+      }),
+      dispatch => ({
+
+      }),
+)(Tags)

@@ -4,6 +4,7 @@ import GridBlock from './Tools/GridBlock';
 import NewTag from './Tools/NewTag';
 import './Styles/Animation.css';
 import {HashRouter as Router,Route,Switch,Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 const Wraper=styled.div`
     width:100%;
@@ -114,62 +115,52 @@ const NewTagButton=styled.div`
     background-image:url(https://www.evernote.com/redesign/global/js/focus/img/new_tag_grey.png);
 `
 
-export default class Tags extends React.Component{
+class Tags extends React.Component{
     constructor(props){
         super(props);
-        this.tags=[{color:"red",text:"danger"},{color:"green",text:"good"},{color:"violet",text:"mad"}];
-        this.notes=[{
-            label:"KsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxa",
-            desc:"voobshe taka9 vaflia shokeKsu aKsuxaK su xaKsu xaKsuxaKsuxaKs xaKsuxaKsuxa Ksuxa suxaKsux KsuxaK uxaKsu xaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxa",
-            tags:[{color:"red",text:"danger"},{color:"green",text:"good"}],
-            folder:"KSUXA",
-            date:new Date(),
-            name:"Ksuxa",
-        },{
-            label:"KsuxaKsuxaKsuxa",
-            desc:"voobshe taka9 xaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxa",
-            tags:[{color:"violet",text:"mad"},{color:"red",text:"danger"}],
-            folder:"KSUXA",
-            date:new Date(),
-            name:"Fad",
-        }];
-    }
-    validateTag(){
-        
-        let tag={
-            color:`rgb(${this.rgb[0].value},${this.rgb[1].value},${this.rgb[2].value})`,
-            title:this.title,
-        }
+        let {tags,notes,folders}=this.props.store;
+        this.tags=tags;
+        this.notes=notes;
+        this.folders=folders;
     }
     render(){
         return(<Wraper>
-            <GridPlace id="gridplace">
-                <Label><LabelText>Tags</LabelText><Link to={`/user/Tags/NewTag`}><NewTagButton title="Create Tag"/></Link></Label>
-                {this.tags.map((elem)=>{
-                    return <Link to={`/user/Tags/${elem.color}`}><Grid><Tag color={elem.color}/><Text>{elem.text}</Text></Grid></Link>;
-                })}
-                <WhiteSpace/>
-            </GridPlace>
-            <Route path="/user/Tags/:tab" render={(props) =>{
-                    let {tab}=props.match.params;
-                    let place=document.getElementById("gridplace");
-                    if( place &&(window.innerWidth <= 500 || window.innerHeight <= 500)){
-                            place.style.display="none";
-
-                    }
-                    if(tab==="NewTag"){
-                        return(<NewTag tags={this.tags} validateTag={this.validateTag}/>)
-                    }
-                    else{
-                        let arr=this.notes.filter((elem)=>elem.tags.findIndex((e)=>e.color===tab)!==-1);
-                        var matchgrid = document.getElementById("matchgrid");
-                    return (<MatchGrid id="matchgrid">
-                        {arr.map(elem=>{
-                            
-                            return (<Link to={`/user/Notes/${elem.name}`}><GridBlock data={elem}/></Link>);
+                    <GridPlace id="gridplace">
+                        <Label><LabelText>Tags</LabelText><Link to={`/user/Tags/NewTag`}><NewTagButton title="Create Tag"/></Link></Label>
+                        {this.tags.map((elem)=>{
+                            return <Link to={`/user/Tags/${elem.text}`}><Grid><Tag color={elem.color}/><Text>{elem.text}</Text></Grid></Link>;
                         })}
-                        </MatchGrid>)
-                    }}}/>
-        </Wraper>)        
+                        <WhiteSpace/>
+                    </GridPlace>
+                    <Router>
+                        <Route path="/user/Tags/:tab" render={(props) =>{
+                                let {tab}=props.match.params;
+                                let place=document.getElementById("gridplace");
+                                if( place &&(window.innerWidth <= 500 || window.innerHeight <= 500)){
+                                        place.style.display="none";
+                                }
+                                if(tab==="NewTag"){
+                                    return(<NewTag tags={this.tags}/>)
+                                }
+                                else{
+                                    let arr=this.notes.filter((elem)=>elem.tags.findIndex((e)=>e.text===tab)!==-1);
+                                    var matchgrid = document.getElementById("matchgrid");
+                                return (<MatchGrid id="matchgrid">
+                                    {arr.map(elem=>{
+                                        return (<Link to={`/user/Notes/${elem.name}`}><GridBlock data={elem}/></Link>);
+                                    })}
+                                    </MatchGrid>)
+                                }}}/>
+                    </Router>
+                </Wraper>)        
     }
 }
+
+export default connect(
+    state =>({
+        store:state
+      }),
+      dispatch => ({
+
+      }),
+)(Tags)

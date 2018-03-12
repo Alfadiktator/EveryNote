@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import {Button} from 'reactstrap';
 import './Styles/Animation.css';
 import DropDown  from './Tools/DropDown';
+import {connect} from 'react-redux';
 
 const Wraper=styled.div`
     width:100%;
@@ -85,41 +86,19 @@ const Tag=styled.li`
     justify-self:center;
 `
 
-export default class CreateNode extends React.Component{
+class CreateNode extends React.Component{
     constructor(props){
         super(props);
-        this.arr=[];
-        this.folders=[];
         this.curtags=[];
         this.curfolder={};
         this.tagchoose = this.tagchoose.bind(this);
-        this.arr.push({color:"aqua",text:"aqua",});
-        this.arr.push({color:"green",text:"green",});
-        this.arr.push({color:"red",text:"red",});
-        this.arr.push({color:"blue",text:"blue",});
-        this.arr.push({color:"black",text:"black",});
-        this.arr.push({color:"violet",text:"violet",});
-        this.arr.push({color:"purple",text:"purple",});
-        this.arr.push({color:"orange",text:"orange",});
-        this.folders.push({name:"KSUXA"});
-        this.folders.push({name:"Qwerty"});
-        this.folders.push({name:"REGAL"});
-        this.state={};
-        if(props.data){
-            this.state = {
-                label:props.data.label,
-                desc:props.data.desc,
-                curfolder:props.data.folder,
-                curtags:props.data.tags,
-            }
-        }
     }
     tagchoose(e){
             let element = document.getElementById(e.currentTarget.id);
-            let ind=this.curtags.findIndex((elem)=>elem.color===element.id);
-            let i=this.arr.findIndex((elem)=>elem.color===element.id);
+            let ind=this.curtags.findIndex((elem)=>elem.text===element.id);
+            let i=this.props.store.tags.findIndex((elem)=>elem.text===element.id);
             if(ind===-1){
-                this.curtags.push(this.arr[i]);
+                this.curtags.push(this.props.store.tags[i]);
                 element.classList.add("enableTag");
                 element.style.backgroundImage="url(https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Icosagon.svg/178px-Icosagon.svg.png)";
                 setTimeout(()=>{element.classList.remove("enableTag")},100);
@@ -131,45 +110,99 @@ export default class CreateNode extends React.Component{
                 setTimeout(()=>{element.classList.remove("unenableTag")},100);
             }
     }
+
     render(){
         return(
         <Wraper>
             <Label id="label" placeholder="Label..."/>
             <Description id="text" placeholder="Description..."/>
                 <Tagarr>
-                    {this.arr.map(({color,text})=>{
-                        return <Tag id={color} color={color} title={text} onClick={this.tagchoose}/>;
+                    {this.props.store.tags.map(({color,text})=>{
+                        return <Tag id={text} color={color} title={text} onClick={this.tagchoose}/>;
                     })}
                 </Tagarr>
-            <DropDown items={this.folders} folder={this.curfolder}></DropDown>
+            <DropDown items={this.props.store.folders} folder={this.curfolder}></DropDown>
             <Button padding="5px" grid-area="button" color="success" onClick={() =>{
                 
             }}>TODO</Button>
         </Wraper>)
     }
-    componentDidMount(){
+    componentWillUpdate(nextProps, nextState){
+        let{label,desc,tags,folder,data,name}=nextProps.store.note;
         let elem;
         let event={};
-        if(this.state.label){
-            elem=document.getElementById("label");
-            elem.value=this.state.label;
+        elem=document.getElementById("label");
+        elem.value="";
+        if(label){
+            elem.value=label;
         }
-        if(this.state.desc){
-            elem=document.getElementById("text");
-            elem.value=this.state.desc;
+        elem=document.getElementById("text");
+        elem.value="";
+        if(desc){
+            elem.value=desc;
         }
-        if(this.state.curtags){
-            for(let i=0;i<this.state.curtags.length;i++){
-                elem=document.getElementById(this.state.curtags[i].color);
+        //console.log('this.curtags',this.curtags);
+        while(this.curtags.length){
+            elem=document.getElementById(this.curtags[0].text);
+            event.currentTarget=elem;
+            this.tagchoose(event);
+        }
+        if(tags){
+            //console.log('tags',tags);
+            for(let i=0;i<tags.length;i++){
+                elem=document.getElementById(tags[i].text);
                 event.currentTarget=elem;
                 this.tagchoose(event);
             }
         }
-        if(this.state.curfolder){
-            elem=document.getElementById(this.state.curfolder);
+        let but = document.getElementById("folderdrop");
+        but.innerHTML='Folders';
+        this.curfolder.name="";
+        if(folder){
+            elem=document.getElementById(folder);
+            but.innerHTML=elem.id;
+            this.curfolder.name=elem.id;
+        }  
+    }
+    componentDidMount(){
+        let{label,desc,tags,folder,data,name}=this.props.store.note;
+        let elem;
+        let event={};
+        if(label){
+            elem=document.getElementById("label");
+            elem.value=label;
+        }
+        if(desc){
+            elem=document.getElementById("text");
+            elem.value=desc;
+        }
+        if(tags){
+            console.log('tags',tags);
+            for(let i=0;i<tags.length;i++){
+                elem=document.getElementById(tags[i].color);
+                event.currentTarget=elem;
+                this.tagchoose(event);
+            }
+        }
+        if(folder){
+            elem=document.getElementById(folder);
             let but = document.getElementById("folderdrop");
             but.innerHTML=elem.id;
             this.curfolder.name=elem.id;
         }
     }
+    componentWillUnmount(){
+        this.props.onCurChange({});
+    }
 }
+
+export default connect(
+    state =>({
+        store:state
+      }),
+      dispatch => ({
+        onCurChange:(data)=>{
+            dispatch({type:'UPDATE_FOCUS_NOTES',payload:data});
+        }
+      }),
+)(CreateNode)

@@ -8,8 +8,9 @@ const Wraper=styled.div`
     height:100vh;
     background-color:#fcfcfc;
     z-index:100;
+    padding-left:30px;
     position:absolute;
-    overflow-y:scroll;
+    overflow-y:auto;
 `
 const Logo=styled.div`
     width:100%;
@@ -24,9 +25,13 @@ const Logo=styled.div`
 
 const Image=styled.div`
     width:calc(90vw - 400px);
-    height:calc(90vh - 100px);
+    height:calc(90vw - 400px);
     @media (max-width: 600px) {
         display:none;
+    }
+    @media (min-width: 1350px) {
+        width:800px;
+        height:800px;
     }
     top:calc(5% + 100px);
     background-color:#C0FAE3;
@@ -40,7 +45,7 @@ class FrontPage extends React.Component {
     }
     render() {
         return (
-           <Wraper><Logo></Logo><Image></Image><Registration onSubmit={this.onSubmit}></Registration><Logon onLogOn={this.onLogOn}></Logon></Wraper>
+           <Wraper><Logo/><Image/><Registration onSubmit={this.onSubmit}></Registration><Logon onLogOn={this.onLogOn}></Logon></Wraper>
         )
       }
 }

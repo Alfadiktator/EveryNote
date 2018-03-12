@@ -66,8 +66,8 @@ class Logon extends React.Component {
           <Input type="password" name="password" id="PasswordLogon" placeholder="Password" value="dfvfdv@dfvdfv.ru" />
         </FormGroup>
         <Centrer><Button color="success" onClick={() =>{
-          this.onLogOn(document.getElementById('EmailLogon').value,
-          document.getElementById('PasswordLogon').value)
+          this.onLogOn({email:document.getElementById('EmailLogon').value,
+          password:document.getElementById('PasswordLogon').value})
         }}>Log on</Button></Centrer>
       </Form>
      </Wrap2>

@@ -42,7 +42,7 @@ const Wraper=styled.div`
 `;
 
 const ButtonWrap=styled.div`
-    height:100%;
+    height:100vh;
     left:0;
     display:grid;
     grid-template-rows:100px auto 100px;
@@ -52,7 +52,7 @@ const ButtonWrap=styled.div`
         height:calc(100% - 50px);
         position:relative;
         left:-100px;
-        z-index:100;
+        z-index:1000;
     }
     @media (max-height: 500px) {
         grid-template-rows:auto 100px;
@@ -101,6 +101,7 @@ const WraperRoute=styled.div`
 
 const Header=styled.div`
     height:50px;
+    z-index:100;
     background-color:rgb(40,167,69);
     grid-area:header;
     @media (max-width: 500px) {
@@ -135,7 +136,6 @@ const Center=styled.div`
 class ButtonMenu extends React.Component {
     constructor(props){
       super(props);
-      
       this.data=props.data;
       this.popUp=false;
       const UserMenuButton=styled.div`
@@ -153,6 +153,7 @@ class ButtonMenu extends React.Component {
       `
       this.usertag= UserMenuButton;
       this.mainMenuDrop=this.mainMenuDrop.bind(this);
+      this.mayDown=this.mayDown.bind(this);
     }
     mainMenuDrop(){
         let elem = document.getElementById("hamburger");
@@ -168,6 +169,11 @@ class ButtonMenu extends React.Component {
         setTimeout(()=>{Menu.style.left="0px";Menu.classList.remove("popUp");}, 300);
         }
         this.popUp=!this.popUp;
+    }
+    mayDown(){
+        if(this.popUp){
+            this.mainMenuDrop();
+        }
     }
     render() {
        return (
@@ -188,7 +194,7 @@ class ButtonMenu extends React.Component {
                         }}/>
                     </Center>
                 </ButtonWrap>
-                <WraperRoute id="wraperRoute">
+                <WraperRoute id="wraperRoute" onClick={this.mayDown}>
                 <Route path="/user/:tab" render={(props) =>{
                     let {tab}=props.match.params;
                     return <Tab tab={tab} data={this.data}/>
@@ -202,9 +208,7 @@ const Tab =(props)=>{
     var {tab}=props;
     var MyComponent=classList[tab];
     let a=document.getElementById("gridplace");
-    
-    if(a && a.style.display==="none"){
-        
+    if(a && a.style.display==="none"){   
          a.style.display="grid";
     }
     return <MyComponent data={props.data}/>;
