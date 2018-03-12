@@ -60,7 +60,7 @@ export default connect(
             xhr.open('POST', '/api/account/logon', false);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.send(`email=${info.email}&password=${info.password}`);
-            xhr.onload((event)=>{
+            xhr.onload=()=>{
               let datas=JSON.parse(xhr.responseText);
               if(datas.success){
                 const {userProfileModel,data}=datas.extras;
@@ -69,7 +69,7 @@ export default connect(
                 dispatch({type:'UPDATE',payload:{notes,tags,folders}});
                 window.location.replace("#/user/Notes");
               }
-            });
+            };
             /*setTimeout(()=>{
               let data={};
               data=test;

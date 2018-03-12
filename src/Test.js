@@ -20,5 +20,11 @@ let notes=[{
     date:new Date(),
     name:"Fad",
 }];
-
+let finalObject={
+    tags,
+    folders,
+    notes,
+    firstName,
+    lastname,
+}
 export default {notes,folders};

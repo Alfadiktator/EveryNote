@@ -59,11 +59,11 @@ class Logon extends React.Component {
       <Form row>
         <FormGroup>
           <Label for="Email" hidden>Email</Label>
-          <Input type="email" name="email" id="EmailLogon" placeholder="Email" value="dfvfdv@dfvdfv.ru"/>
+          <Input type="email" name="email" id="EmailLogon" placeholder="Email..."/>
         </FormGroup>
         <FormGroup>
           <Label for="Password" hidden>Password</Label>
-          <Input type="password" name="password" id="PasswordLogon" placeholder="Password" value="dfvfdv@dfvdfv.ru" />
+          <Input type="password" name="password" id="PasswordLogon" placeholder="Password..."/>
         </FormGroup>
         <Centrer><Button color="success" onClick={() =>{
           this.onLogOn({email:document.getElementById('EmailLogon').value,
