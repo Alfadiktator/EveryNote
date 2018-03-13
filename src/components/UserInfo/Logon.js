@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import styled from 'styled-components'
-import {markdown} from 'markdown';
 import {Link} from 'react-router-dom';
 
 const Wrap1=styled.div`
@@ -52,7 +51,6 @@ class Logon extends React.Component {
   }
 
   render() {
-//markdown.toHTML( "Hello *World*!");
     return (
     <Wrap1>
         <Wrap2>
@@ -66,9 +64,34 @@ class Logon extends React.Component {
           <Input type="password" name="password" id="PasswordLogon" placeholder="Password..."/>
         </FormGroup>
         <Centrer><Button color="success" onClick={() =>{
-          (/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
-          this.onLogOn({email:document.getElementById('EmailLogon').value,
-          password:document.getElementById('PasswordLogon').value})
+          let em=document.getElementById('EmailLogon').value.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+          let pas=document.getElementById('PasswordLogon').value;
+          if(em && pas){
+            this.onLogOn({
+              email:em[0],
+              password:pas})
+          }
+          else{
+            if(!em){
+              let el=document.getElementById('EmailLogon');
+              let temp=el.value;
+              el.value="Please,enter correct email";
+              el.style.color="red";
+              setTimeout(()=>{
+                  el.value=temp;
+                  el.style.color="black";
+              },1000);
+            }
+            else{
+              let el=document.getElementById('PasswordLogon');
+              el.value="Please,enter password";
+              el.style.color="red";
+              setTimeout(()=>{
+                  el.value="";
+                  el.style.color="black";
+              },1000);
+            }
+          }
         }}>Log on</Button></Centrer>
       </Form>
      </Wrap2>

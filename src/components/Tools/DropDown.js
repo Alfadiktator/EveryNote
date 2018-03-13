@@ -61,6 +61,9 @@ export default class DropDown extends React.Component{
     itemSelect(e){
         e=e.currentTarget;
         let but = document.getElementById("folderdrop");
+        if(e.id==='-'){
+            but.innerHTML='Folders';
+        }
         but.innerHTML=e.id;
         this.drop();
     }
@@ -97,8 +100,9 @@ export default class DropDown extends React.Component{
             <DropButton id="folderdrop" onClick={this.drop}>
                 Folders
             </DropButton>
+            <DropItem id="-" key="-" className="folderitem" onClick={this.itemSelect}>{"-"}</DropItem>
             {this.arr.map((e)=>{
-                return <DropItem id={e.name} key={e.name} className="folderitem" onClick={this.itemSelect}>{e.name}</DropItem>
+                return <DropItem id={e} key={e} className="folderitem" onClick={this.itemSelect}>{e}</DropItem>
             })}
         </DropDownComponent>            
         );

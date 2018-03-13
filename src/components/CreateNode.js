@@ -5,6 +5,7 @@ import './Styles/Animation.css';
 import DropDown  from './Tools/DropDown';
 import {connect} from 'react-redux';
 import hash from 'object-hash';
+import {markdown} from 'markdown';
 
 const Wraper=styled.div`
     width:100%;
@@ -139,8 +140,8 @@ class CreateNode extends React.Component{
             return;
         }
         let note={};
-        note.label=label.value;
-        note.desc=text.value;
+        note.label=markdown.toHTML(label.value);
+        note.desc=markdown.toHTML(text.value);
         note.tags=this.curtags.slice(0);
         let but = document.getElementById("folderdrop");
         if(but.innerHTML==="Folders"){
@@ -182,12 +183,12 @@ class CreateNode extends React.Component{
         elem=document.getElementById("label");
         elem.value="";
         if(label){
-            elem.value=label;
+            elem.innerHTML=label;
         }
         elem=document.getElementById("text");
         elem.value="";
         if(desc){
-            elem.value=desc;
+            elem.innerHTML=desc;
         }
         while(this.curtags.length){
             elem=document.getElementById(this.curtags[0].text);
