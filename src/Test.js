@@ -2,9 +2,9 @@ let tags=[];
 tags.push({color:"#ccc",text:"important"});
 tags.push({color:"#000",text:"releav"});
 let folders=[];
-folders.push({name:"KSUXA"});
-folders.push({name:"Qwerty"});
-folders.push({name:"REGAL"});
+folders.push("KSUXA");
+folders.push("Qwerty");
+folders.push("REGAL");
 let notes=[{
     label:"KsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxa",
     desc:"voobshe taka9 vaflia shokeKsu aKsuxaK su xaKsu xaKsuxaKsuxaKs xaKsuxaKsuxa ",

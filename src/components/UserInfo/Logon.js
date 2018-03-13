@@ -59,13 +59,14 @@ class Logon extends React.Component {
       <Form row>
         <FormGroup>
           <Label for="Email" hidden>Email</Label>
-          <Input type="email" name="email" id="EmailLogon" placeholder="Email..."/>
+          <Input type="email" name="email" id="EmailLogon" placeholder="king@example.com"/>
         </FormGroup>
         <FormGroup>
           <Label for="Password" hidden>Password</Label>
           <Input type="password" name="password" id="PasswordLogon" placeholder="Password..."/>
         </FormGroup>
         <Centrer><Button color="success" onClick={() =>{
+          (/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
           this.onLogOn({email:document.getElementById('EmailLogon').value,
           password:document.getElementById('PasswordLogon').value})
         }}>Log on</Button></Centrer>

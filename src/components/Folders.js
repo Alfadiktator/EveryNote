@@ -171,26 +171,26 @@ class Tags extends React.Component{
                 </NewFolderBlock>
                 </Label>
                 {this.folders.map((elem)=>{
-                    return <Link to={`/user/Folder/${elem.name}`}><Grid><Text>{elem.name}</Text><FolderImg/></Grid></Link>;
+                    return <Link to={`/user/Folder/${elem}`}><Grid><Text>{elem}</Text><FolderImg/></Grid></Link>;
                 })}
                 <WhiteSpace/>
             </GridPlace>
             <Router>
-                <Route path="/user/Folder/:tab" render={(props) =>{
-                        console.log('this',this);
-                        let {tab}=props.match.params;
-                        let place=document.getElementById("gridplace");
-                        if( place &&(window.innerWidth <= 500 || window.innerHeight <= 500)){
-                                place.style.display="none";
-                        }
-                        let arr=this.notes.filter((elem)=>elem.folder===tab);
-                        var matchgrid = document.getElementById("matchgrid");
-                        return (<MatchGrid id="matchgrid">
-                                    {arr.map(elem=>{
-                                        return (<Link to={`/user/Notes/${elem.name}`}><GridBlock data={elem}/></Link>);
-                                    })}
-                                </MatchGrid>)
-                        }}/>
+            <Route path="/user/Folder/:tab" render={(props) =>{
+                    console.log('this',this);
+                    let {tab}=props.match.params;
+                    let place=document.getElementById("gridplace");
+                    if( place &&(window.innerWidth <= 500 || window.innerHeight <= 500)){
+                            place.style.display="none";
+                    }
+                    let arr=this.notes.filter((elem)=>elem.folder===tab);
+                    var matchgrid = document.getElementById("matchgrid");
+                    return (<MatchGrid id="matchgrid">
+                                {arr.map(elem=>{
+                                    return (<Link to={`/user/Notes/${elem.name}`}><GridBlock data={elem}/></Link>);
+                                })}
+                            </MatchGrid>)
+                    }}/>
             </Router>
         </Wraper>)        
     }

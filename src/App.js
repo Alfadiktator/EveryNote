@@ -85,17 +85,23 @@ export default connect(
           /*let xhr=new XMLHttpRequest();
             xhr.open('POST', '/api/account/logon', false);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send(`email=${info.email}&password=${info.password}`);
             xhr.onload=()=>{
               let datas=JSON.parse(xhr.responseText);
+              console.log(datas);
               if(datas.success){
                 const {userProfileModel,data}=datas.extras;
-                const {notes,tags,folders}=data;
+                let {notes,tags,folders}=data;
+                notes = notes.map((el) => JSON.parse(el));
+                tags = tags.map((el) => JSON.parse(el));
+                folders = folders.map((el) => JSON.parse(el));
+                notes = notes.map((el) => {el.date = new Date(el.date); return el;});
                 dispatch({type:'GET_USER_INFO',payload:userProfileModel});
                 dispatch({type:'UPDATE',payload:{notes,tags,folders}});
                 window.location.replace("#/user/Notes");
               }
-            };*/
+            };
+            xhr.send(email=${info.email}&password=${info.password});
+            */
             setTimeout(()=>{
               let data={};
               data=test;
