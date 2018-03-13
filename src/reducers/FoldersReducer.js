@@ -2,7 +2,12 @@
 export default function update(state=[],action){
     switch(action.type){
         case 'UPDATE':
-            return [...state,...action.payload.folders];
+            if(action.payload.folders){
+                return [...state,...action.payload.folders];
+            }
+            else{
+                return state;
+            }
         break;
     }
     return state;

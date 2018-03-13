@@ -161,6 +161,8 @@ export default connect(
         store:state
       }),
       dispatch => ({
-
+        onCurChange:(data)=>{
+            dispatch({type:'UPDATE_FOCUS_NOTES',payload:data});
+        }
       }),
 )(Tags)

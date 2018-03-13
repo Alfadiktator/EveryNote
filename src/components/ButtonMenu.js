@@ -196,6 +196,7 @@ class ButtonMenu extends React.Component {
                 </ButtonWrap>
                 <WraperRoute id="wraperRoute" onClick={this.mayDown}>
                 <Route path="/user/:tab" render={(props) =>{
+                    console.log("route");
                     let {tab}=props.match.params;
                     return <Tab tab={tab} data={this.data}/>
                 }}/>

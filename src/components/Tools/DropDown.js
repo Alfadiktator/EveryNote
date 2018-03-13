@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
+import {connect} from 'react-redux';
 
 const DropButton=styled.div`
     width:150px;
@@ -46,12 +47,11 @@ const DropItem=styled.li`
     background-position: right center;
 `
 
+
 export default class DropDown extends React.Component{
     constructor(props){
         super(props);
-        
         this.arr=props.items;
-        this.folder=props.folder;
         this.state = {
             dropdownOpen: false,
         }
@@ -60,11 +60,8 @@ export default class DropDown extends React.Component{
     }
     itemSelect(e){
         e=e.currentTarget;
-        
         let but = document.getElementById("folderdrop");
         but.innerHTML=e.id;
-        
-        this.folder.name=e.id;
         this.drop();
     }
     drop(){

@@ -33,7 +33,6 @@ state={
     
  }
   render() {
-    console.log(this.props.testStore);
     return (
         <Wraper>
           <Router>
@@ -53,10 +52,37 @@ export default connect(
       testStore:state,
     }),
     dispatch => ({
-      onLogOn:(info)=>{
+      onCheck:()=>{
         const asyncGetData= ()=>{
           return (dispatch)=>{
             let xhr=new XMLHttpRequest();
+            xhr.open('POST', '/api/account/getdata', false);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send();
+            xhr.onload=()=>{
+              let datas=JSON.parse(xhr.responseText);
+              if(datas.success){
+                const {userProfileModel,data}=datas.extras;
+                const {notes,tags,folders}=data;
+                dispatch({type:'GET_USER_INFO',payload:userProfileModel});
+                dispatch({type:'UPDATE',payload:{notes,tags,folders}});
+              }
+            };
+            /*setTimeout(()=>{
+              let data={};
+              data=test;
+              dispatch({type:'GET_USER_INFO',payload:{email:"qwerty",firstname:"rew",secondname:"das"}});
+              dispatch({type:'UPDATE',payload:data});
+              window.location.replace("#/user/Notes");
+            },100);*/
+          }
+        }
+        dispatch(asyncGetData());        
+      },
+      onLogOn:(info)=>{
+        const asyncGetData= ()=>{
+          return (dispatch)=>{
+          /*let xhr=new XMLHttpRequest();
             xhr.open('POST', '/api/account/logon', false);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.send(`email=${info.email}&password=${info.password}`);
@@ -69,12 +95,14 @@ export default connect(
                 dispatch({type:'UPDATE',payload:{notes,tags,folders}});
                 window.location.replace("#/user/Notes");
               }
-            };
-            /*setTimeout(()=>{
+            };*/
+            setTimeout(()=>{
               let data={};
               data=test;
-
-            },1000);*/
+              dispatch({type:'GET_USER_INFO',payload:{email:"qwerty",firstname:"rew",secondname:"das"}});
+              dispatch({type:'UPDATE',payload:data});
+              window.location.replace("#/user/Notes");
+            },100);
           }
         }
         dispatch(asyncGetData());

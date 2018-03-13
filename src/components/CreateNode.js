@@ -4,6 +4,7 @@ import {Button} from 'reactstrap';
 import './Styles/Animation.css';
 import DropDown  from './Tools/DropDown';
 import {connect} from 'react-redux';
+import hash from 'object-hash';
 
 const Wraper=styled.div`
     width:100%;
@@ -54,12 +55,12 @@ const Description=styled.textarea`
 
 const Tagarr=styled.div`
     box-shadow: 0 2px 0 0 #d7d8db, 0 0 0 2px #e3e4e8;
-    width:180px;
-    height:30px;
+    width:auto;
+    height:40px;
     display:grid;
     grid-area:tags;
     justify-content:center;
-    overflow-y:hidden;
+    overflow-y:auto;
     grid-template-columns:repeat(auto-fit,20px);
     grid-gap:1px;
     padding:5px;
@@ -90,10 +91,11 @@ class CreateNode extends React.Component{
     constructor(props){
         super(props);
         this.curtags=[];
-        this.curfolder={};
         this.tagchoose = this.tagchoose.bind(this);
+        this.createValidate=this.createValidate.bind(this);
     }
     tagchoose(e){
+            console.log(e.currentTarget.id);
             let element = document.getElementById(e.currentTarget.id);
             let ind=this.curtags.findIndex((elem)=>elem.text===element.id);
             let i=this.props.store.tags.findIndex((elem)=>elem.text===element.id);
@@ -110,7 +112,55 @@ class CreateNode extends React.Component{
                 setTimeout(()=>{element.classList.remove("unenableTag")},100);
             }
     }
-
+    createValidate(e){
+        let label= document.getElementById("label");
+        let text= document.getElementById("text");
+        if(!(label.value)){
+            label.value="Labels can not be empty";
+            label.style.border="2px solid red";
+            label.style.color="red";
+            setTimeout(()=>{
+                label.value="";
+                label.style.color="black";
+                label.style.border="0";
+                label.style.borderBottom="2px solid grey";
+            },1000);
+            return;
+        }
+        if(!(text.value)){
+            text.value="Description can not be empty";
+            text.style.border="2px solid red";
+            text.style.color="red";
+            setTimeout(()=>{
+                text.style.color="black";
+                text.value="";
+                text.style.border="0";
+            },1000);
+            return;
+        }
+        let note={};
+        note.label=label.value;
+        note.desc=text.value;
+        note.tags=this.curtags.slice(0);
+        let but = document.getElementById("folderdrop");
+        if(but.innerHTML==="Folders"){
+            note.folder="";
+        }
+        else{
+            note.folder=but.innerHTML;
+        }
+        note.date=new Date().toUTCString().match(/,.+\d\d:/)[0];
+        note.date=note.date.substring(2,note.date.length-1);
+        if(this.props.store.note.name){
+            note.name=this.props.store.note.name;
+            console.log('note',JSON.parse(JSON.stringify(note)));
+            this.props.onEditNote(note);
+        }
+        else{
+            note.name=hash(note);
+            this.props.onNewNote(note);
+        }
+    }
     render(){
         return(
         <Wraper>
@@ -121,10 +171,8 @@ class CreateNode extends React.Component{
                         return <Tag id={text} color={color} title={text} onClick={this.tagchoose}/>;
                     })}
                 </Tagarr>
-            <DropDown items={this.props.store.folders} folder={this.curfolder}></DropDown>
-            <Button padding="5px" grid-area="button" color="success" onClick={() =>{
-                
-            }}>TODO</Button>
+            <DropDown items={this.props.store.folders}></DropDown>
+            <Button padding="5px" grid-area="button" color="success" onClick={this.createValidate}>TODO</Button>
         </Wraper>)
     }
     componentWillUpdate(nextProps, nextState){
@@ -141,14 +189,12 @@ class CreateNode extends React.Component{
         if(desc){
             elem.value=desc;
         }
-        //console.log('this.curtags',this.curtags);
         while(this.curtags.length){
             elem=document.getElementById(this.curtags[0].text);
             event.currentTarget=elem;
             this.tagchoose(event);
         }
         if(tags){
-            //console.log('tags',tags);
             for(let i=0;i<tags.length;i++){
                 elem=document.getElementById(tags[i].text);
                 event.currentTarget=elem;
@@ -157,12 +203,10 @@ class CreateNode extends React.Component{
         }
         let but = document.getElementById("folderdrop");
         but.innerHTML='Folders';
-        this.curfolder.name="";
         if(folder){
             elem=document.getElementById(folder);
             but.innerHTML=elem.id;
-            this.curfolder.name=elem.id;
-        }  
+        }
     }
     componentDidMount(){
         let{label,desc,tags,folder,data,name}=this.props.store.note;
@@ -177,9 +221,8 @@ class CreateNode extends React.Component{
             elem.value=desc;
         }
         if(tags){
-            console.log('tags',tags);
             for(let i=0;i<tags.length;i++){
-                elem=document.getElementById(tags[i].color);
+                elem=document.getElementById(tags[i].text);
                 event.currentTarget=elem;
                 this.tagchoose(event);
             }
@@ -188,7 +231,6 @@ class CreateNode extends React.Component{
             elem=document.getElementById(folder);
             let but = document.getElementById("folderdrop");
             but.innerHTML=elem.id;
-            this.curfolder.name=elem.id;
         }
     }
     componentWillUnmount(){
@@ -203,6 +245,56 @@ export default connect(
       dispatch => ({
         onCurChange:(data)=>{
             dispatch({type:'UPDATE_FOCUS_NOTES',payload:data});
-        }
+        },
+        onNewNote:(data)=>{
+            const asyncSetData= ()=>{
+              return (dispatch)=>{
+              /*let xhr=new XMLHttpRequest();
+                xhr.open('POST', '/api/account/logon', false);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send(`email=${info.email}&password=${info.password}`);
+                xhr.onload=()=>{
+                  let datas=JSON.parse(xhr.responseText);
+                  if(datas.success){
+                    const {userProfileModel,data}=datas.extras;
+                    const {notes,tags,folders}=data;
+                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
+                    dispatch({type:'UPDATE',payload:{notes,tags,folders}});
+                    window.location.replace("#/user/Notes");
+                  }
+                };*/
+                setTimeout(()=>{
+                  dispatch({type:'UPDATE',payload:{notes:[data]}});
+                  window.location.replace("#/user/Notes");
+                },200);
+              }
+            }
+            dispatch(asyncSetData());
+          },
+        onEditNote:(data)=>{
+            const asyncSetData= ()=>{
+              return (dispatch)=>{
+              /*let xhr=new XMLHttpRequest();
+                xhr.open('POST', '/api/account/logon', false);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send(`email=${info.email}&password=${info.password}`);
+                xhr.onload=()=>{
+                  let datas=JSON.parse(xhr.responseText);
+                  if(datas.success){
+                    const {userProfileModel,data}=datas.extras;
+                    const {notes,tags,folders}=data;
+                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
+                    dispatch({type:'UPDATE',payload:{notes,tags,folders}});
+                    window.location.replace("#/user/Notes");
+                  }
+                };*/
+                setTimeout(()=>{
+                  dispatch({type:'EDIT',payload:data});
+                  window.location.replace("#/user/Notes");
+                },200);
+              }
+            }
+            dispatch(asyncSetData());
+          },
       }),
 )(CreateNode)

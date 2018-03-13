@@ -1,5 +1,6 @@
 import React from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components';
+import {connect} from 'react-redux';
 
 const Wraper=styled.div`
     width:300px;
@@ -144,21 +145,82 @@ const DateBlock=styled.div`
     }
 }*/
 
-export default function GridBlock(props){
+function GridBlock(props){
         let {data}=props;
-        let time=data.date.toUTCString().match(/,.+\d\d:/)[0];
         return(
             <Wraper>
-                <Label><Labelblock>{data.label}</Labelblock><Report/><Delete/></Label>
-                <Description>{data.desc}</Description>
+                <Label><Labelblock>{data.label}</Labelblock><Report onClick={(e)=>{
+                    e.preventDefault();
+                    this.props.onReport(data);
+                }}/><Delete onClick={(e)=>{
+                    e.preventDefault();
+                    this.props.onDelete(data);
+                }}/></Label>
+                <Description value={data.desc}/>
                 <BottomInfo>
                 <TagsArea>
                     {data.tags.map(({color,text})=>{
                         return <Tag color={color} title={text}></Tag>;
                     })}
                 </TagsArea>
-                <DateBlock>{time.substring(2,time.length-1)}</DateBlock>
+                <DateBlock>{data.date}</DateBlock>
                 </BottomInfo>
             </Wraper>
         );
 }
+
+export default connect(
+    state =>({
+        store:state,
+      }),
+      dispatch => ({
+        onDelete:(data)=>{
+            const asyncSetData= ()=>{
+              return (dispatch)=>{
+              /*let xhr=new XMLHttpRequest();
+                xhr.open('POST', '/api/account/logon', false);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send(`email=${info.email}&password=${info.password}`);
+                xhr.onload=()=>{
+                  let datas=JSON.parse(xhr.responseText);
+                  if(datas.success){
+                    const {userProfileModel,data}=datas.extras;
+                    const {notes,tags,folders}=data;
+                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
+                    dispatch({type:'UPDATE',payload:{notes,tags,folders}});
+                    window.location.replace("#/user/Notes");
+                  }
+                };*/
+                setTimeout(()=>{
+                    dispatch({type:'DELETE_NOTE',payload:data});
+                },200);
+              }
+            }
+            dispatch(asyncSetData());
+          },
+        onReport:(data)=>{
+            const asyncSetData= ()=>{
+              return (dispatch)=>{
+              /*let xhr=new XMLHttpRequest();
+                xhr.open('POST', '/api/account/logon', false);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send(`email=${info.email}&password=${info.password}`);
+                xhr.onload=()=>{
+                  let datas=JSON.parse(xhr.responseText);
+                  if(datas.success){
+                    const {userProfileModel,data}=datas.extras;
+                    const {notes,tags,folders}=data;
+                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
+                    dispatch({type:'UPDATE',payload:{notes,tags,folders}});
+                    window.location.replace("#/user/Notes");
+                  }
+                };*/
+                setTimeout(()=>{
+                    dispatch({type:'REPORT_NOTE',payload:data});
+                },200);
+              }
+            }
+            dispatch(asyncSetData());
+          },
+      }),
+)(GridBlock)
