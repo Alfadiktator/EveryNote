@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {connect} from 'react-redux';
+import {markdown} from 'markdown';
 
 const Wraper=styled.div`
     width:300px;
@@ -22,13 +23,13 @@ const Label=styled.div`
         background-color:#2dbe60;
     }
 `
-const Description=styled.textarea`
-    width:100%;
-    overflow-y:hidden;
-    outline:none;
+const Description=styled.div`
+    width:320px;
+    overflow:hidden;
     box-shadow: 0 2px 0 0 #d7d8db, 0 0 0 2px #e3e4e8;
     font-weight:300;
     font-size:15px;
+    color:black;
     padding:10px;
     padding-bottom:30px;
     ${Wraper}:hover &{
@@ -103,49 +104,90 @@ const DateBlock=styled.div`
     }
 `
 
-/*export default class GridBlock extends React.Component{
+class GridBlock extends React.Component{
     constructor(props){
         super(props);
-        
-        if(props && props.data){
-            for(let prop in data){
-                if(props.data.hasOwnProperty(prop)){
-                    data[prop]=props.data[prop];
-                }
+        let ind=props.ind;
+        if(props.data){
+            let {label,desc,tags,folder,date,name}=props.data;
+            this.state={
+                label,
+                desc,
+                tags,
+                folder,
+                date,
+                name,
+                ind,
             }
         }
-        
-        let {label,desc,tags,folder}=data;
-        data.label=label;
-        data.desc=desc;
-        data.arrtags=tags;
-        data.folder=folder;
-        data.date=data.date;
-        data.name=data.name;
-        data.state={
-            
+        else{
+            this.state={
+                label:"",
+                desc:"",
+                tags:[],
+                folder:"",
+                date:"",
+                name:"",
+                ind,
+            }
         }
+        this.onDel=this.onDel.bind(this);
+        this.onRep=this.onRep.bind(this);
+    }
+    onDel(e){
+        e.preventDefault();
+        this.props.onDelete(this.state.name);
+    }
+    onRep(e){
+
     }
     render(){
-        let time=data.date.toUTCString().match(/,.+\d\d:/)[0];
         return(
             <Wraper>
-                <Label><Labelblock>{data.label}</Labelblock><Report/><Delete/></Label>
-                <Description>{data.desc}</Description>
+                <Label><Labelblock className='label'></Labelblock><Report onClick={this.onRep}/><Delete onClick={this.onDel}/></Label>
+                <Description className='desc'></Description>
                 <BottomInfo>
                 <TagsArea>
-                    {data.arrtags.map(({color,text})=>{
+                    {this.state.tags.map(({color,text})=>{
                         return <Tag color={color} title={text}></Tag>;
                     })}
                 </TagsArea>
-                <DateBlock>{time.substring(2,time.length-1)}</DateBlock>
+                <DateBlock>{this.state.date}</DateBlock>
                 </BottomInfo>
             </Wraper>
         );
     }
-}*/
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps);
+        let ind=nextProps.ind;
+        let {label,desc,tags,folder,date,name}=nextProps.data;
+        this.setState({
+            label,
+            desc,
+            tags,
+            folder,
+            date,
+            ind,
+            name,
+        })
+    }
+    componentDidUpdate(){
+        let el=document.getElementsByClassName('label')[this.state.ind];
+        el.innerHTML=markdown.toHTML(this.state.label);
+        el=document.getElementsByClassName('desc')[this.state.ind];
+        let str=markdown.toHTML(this.state.desc);
+        el.innerHTML=str.substring(3,str.length-4);
+    }
+    componentDidMount(){
+        let el=document.getElementsByClassName('label')[this.state.ind];
+        el.innerHTML=markdown.toHTML(this.state.label);
+        el=document.getElementsByClassName('desc')[this.state.ind];
+        let str=markdown.toHTML(this.state.desc);
+        el.innerHTML=str.substring(3,str.length-4);
+    }
+}
 
-function GridBlock(props){
+/*function GridBlock(props){
         let {data}=props;
         return(
             <Wraper>
@@ -159,7 +201,7 @@ function GridBlock(props){
                 <Description value={data.desc}/>
                 <BottomInfo>
                 <TagsArea>
-                    {data.tags.map(({color,text})=>{
+                    {data.tags && data.tags.map(({color,text})=>{
                         return <Tag color={color} title={text}></Tag>;
                     })}
                 </TagsArea>
@@ -167,13 +209,14 @@ function GridBlock(props){
                 </BottomInfo>
             </Wraper>
         );
-}
+}*/
 
 export default connect(
     state =>({
         store:state,
       }),
       dispatch => ({
+          
         onDelete:(data)=>{
             const asyncSetData= ()=>{
               return (dispatch)=>{
@@ -192,6 +235,7 @@ export default connect(
                   }
                 };*/
                 setTimeout(()=>{
+                    window.location.replace("#/user/Notes");
                     dispatch({type:'DELETE_NOTE',payload:data});
                 },200);
               }

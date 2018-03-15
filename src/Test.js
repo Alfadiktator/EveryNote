@@ -1,6 +1,18 @@
 let tags=[];
+tags.push({color:"#ccc",text:"important3r234234"});
+tags.push({color:"#000",text:"releav234234234"});
+tags.push({color:"grey",text:"grey",});
+tags.push({color:"green",text:"green",});
+tags.push({color:"red",text:"red",});
+tags.push({color:"#54BCF9",text:"blue",});
+tags.push({color:"violet",text:"violet",});
+tags.push({color:"orange",text:"orange",});
+tags.push({color:"#FCD448",text:"yellow",});
 tags.push({color:"#ccc",text:"important"});
-tags.push({color:"#000",text:"releav"});
+tags.push({color:"#000",text:"releavfvdv"});
+tags.push({color:"#349Cd9",text:"bluedfvdfv",});
+tags.push({color:"#444",text:"releavssss"});
+tags.push({color:"#684963",text:"bluesss",});
 let folders=[];
 folders.push("KSUXA");
 folders.push("Qwerty");
@@ -13,8 +25,8 @@ let notes=[{
     date:"13 Mar 2018 13:35",
     name:"Ksuxa",
 },{
-    label:"KsuxaKsuxaKsuxa",
-    desc:"voobshe taka9 xaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxaKsuxa",
+    label:"werwerwer",
+    desc:"qwe",
     tags:[{color:"violet",text:"violet",},{color:"red",text:"red",}],
     folder:"REGAL",
     date:"13 Mar 2018 13:35",

@@ -146,8 +146,8 @@ class Tags extends React.Component{
                                     let arr=this.notes.filter((elem)=>elem.tags.findIndex((e)=>e.text===tab)!==-1);
                                     var matchgrid = document.getElementById("matchgrid");
                                 return (<MatchGrid id="matchgrid">
-                                    {arr.map(elem=>{
-                                        return (<Link to={`/user/Notes/${elem.name}`}><GridBlock data={elem}/></Link>);
+                                    {arr.map((elem,ind)=>{
+                                        return (<Link to={`/user/Notes/${elem.name}`}><GridBlock data={elem} ind={ind}/></Link>);
                                     })}
                                     </MatchGrid>)
                                 }}}/>

@@ -5,10 +5,8 @@ import './Styles/Animation.css';
 import DropDown  from './Tools/DropDown';
 import {connect} from 'react-redux';
 import hash from 'object-hash';
-import {markdown} from 'markdown';
 
 const Wraper=styled.div`
-    width:100%;
     height:100vh;
     padding:30px;
     overflow-y:auto;
@@ -22,7 +20,7 @@ const Wraper=styled.div`
     "tags time button";
     @media (max-width: 500px) {
         overflow-y:auto;
-        grid-template-rows:30px 150px 35px 70px 35px;
+        grid-template-rows:30px 150px 35px 100px 35px;
         grid-template-columns: auto;
         grid-template-areas:
         "label"
@@ -56,26 +54,25 @@ const Description=styled.textarea`
 
 const Tagarr=styled.div`
     box-shadow: 0 2px 0 0 #d7d8db, 0 0 0 2px #e3e4e8;
-    width:auto;
-    height:40px;
+    width:180px;
+    height:100px;
     display:grid;
-    grid-area:tags;
-    justify-content:center;
-    overflow-y:auto;
     grid-template-columns:repeat(auto-fit,20px);
-    grid-gap:1px;
+    grid-gap:2px;
+    grid-area:tags;
+    overflow-y:auto;
+    justify-content:center;
+    align-content:center;
     padding:5px;
     margin-right:15px;
     @media (max-width: 500px) {
-        height:50px;
         margin-bottom:20px;
         width:auto;
     }
 `
 
-const Tag=styled.li`
-    margin:0;
-    border-radius:5px;
+const Tag=styled.div`
+    margin:0 2px;
     width:15px;
     height:15px;
     border-radius:50%;
@@ -84,19 +81,39 @@ const Tag=styled.li`
     background-repeat: no-repeat;
     background-position: center center;
     z-index:100;
-    align-self:center;
     justify-self:center;
+    align-self:center;
 `
 
 class CreateNode extends React.Component{
     constructor(props){
         super(props);
+        if(props.data){
+            let {label,desc,tags,folder,date,name}=props.data;
+            this.state={
+                label,
+                desc,
+                tags,
+                folder,
+                date,
+                name,
+            }
+        }
+        else{
+            this.state={
+                label:"",
+                desc:"",
+                tags:[],
+                folder:"",
+                date:"",
+                name:"",
+            }
+        }
         this.curtags=[];
         this.tagchoose = this.tagchoose.bind(this);
         this.createValidate=this.createValidate.bind(this);
     }
     tagchoose(e){
-            console.log(e.currentTarget.id);
             let element = document.getElementById(e.currentTarget.id);
             let ind=this.curtags.findIndex((elem)=>elem.text===element.id);
             let i=this.props.store.tags.findIndex((elem)=>elem.text===element.id);
@@ -140,8 +157,8 @@ class CreateNode extends React.Component{
             return;
         }
         let note={};
-        note.label=markdown.toHTML(label.value);
-        note.desc=markdown.toHTML(text.value);
+        note.label=label.value;
+        note.desc=text.value;
         note.tags=this.curtags.slice(0);
         let but = document.getElementById("folderdrop");
         if(but.innerHTML==="Folders"){
@@ -152,10 +169,9 @@ class CreateNode extends React.Component{
         }
         note.date=new Date().toUTCString().match(/,.+\d\d:/)[0];
         note.date=note.date.substring(2,note.date.length-1);
-        if(this.props.store.note.name){
-            note.name=this.props.store.note.name;
-            console.log('note',JSON.parse(JSON.stringify(note)));
-            this.props.onEditNote(note);
+        if(this.state.name){
+            note.name=this.state.name;
+            this.props.onEditNote(note,this.props.store.notes);
         }
         else{
             note.name=hash(note);
@@ -176,19 +192,32 @@ class CreateNode extends React.Component{
             <Button padding="5px" grid-area="button" color="success" onClick={this.createValidate}>TODO</Button>
         </Wraper>)
     }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.data){
+            let {label,desc,tags,folder,date,name}=nextProps.data;
+            this.setState({
+                label,
+                desc,
+                tags,
+                folder,
+                date,
+                name,
+            })
+        }
+    }
     componentWillUpdate(nextProps, nextState){
-        let{label,desc,tags,folder,data,name}=nextProps.store.note;
+        let{label,desc,tags,folder,data,name}=nextState;
         let elem;
         let event={};
         elem=document.getElementById("label");
         elem.value="";
         if(label){
-            elem.innerHTML=label;
+            elem.value=label;
         }
         elem=document.getElementById("text");
         elem.value="";
         if(desc){
-            elem.innerHTML=desc;
+            elem.value=desc;
         }
         while(this.curtags.length){
             elem=document.getElementById(this.curtags[0].text);
@@ -210,7 +239,7 @@ class CreateNode extends React.Component{
         }
     }
     componentDidMount(){
-        let{label,desc,tags,folder,data,name}=this.props.store.note;
+        let{label,desc,tags,folder,data,name}=this.state;
         let elem;
         let event={};
         if(label){
@@ -234,65 +263,56 @@ class CreateNode extends React.Component{
             but.innerHTML=elem.id;
         }
     }
-    componentWillUnmount(){
-        this.props.onCurChange({});
-    }
 }
 
 export default connect(
     state =>({
-        store:state
+        store:state,
       }),
       dispatch => ({
-        onCurChange:(data)=>{
-            dispatch({type:'UPDATE_FOCUS_NOTES',payload:data});
-        },
         onNewNote:(data)=>{
             const asyncSetData= ()=>{
               return (dispatch)=>{
-              /*let xhr=new XMLHttpRequest();
-                xhr.open('POST', '/api/account/logon', false);
+                let xhr=new XMLHttpRequest();
+                xhr.open('POST', '/api/notes/create', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send(`email=${info.email}&password=${info.password}`);
+                xhr.send(`note=${JSON.stringify(data)}`);
                 xhr.onload=()=>{
                   let datas=JSON.parse(xhr.responseText);
                   if(datas.success){
-                    const {userProfileModel,data}=datas.extras;
-                    const {notes,tags,folders}=data;
-                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
-                    dispatch({type:'UPDATE',payload:{notes,tags,folders}});
                     window.location.replace("#/user/Notes");
+                    dispatch({type:'NOTE_CREATE',payload:data});
                   }
-                };*/
-                setTimeout(()=>{
-                  dispatch({type:'UPDATE',payload:{notes:[data]}});
-                  window.location.replace("#/user/Notes");
-                },200);
+                };
+                /*setTimeout(()=>{
+                    window.location.replace("#/user/Notes");
+                  dispatch({type:'NOTE_CREATE',payload:data});
+                },200);*/
               }
             }
             dispatch(asyncSetData());
           },
-        onEditNote:(data)=>{
+        onEditNote:(data,arr)=>{
+            console.log('this',this);
             const asyncSetData= ()=>{
               return (dispatch)=>{
-              /*let xhr=new XMLHttpRequest();
-                xhr.open('POST', '/api/account/logon', false);
+                console.log('this',arr);
+                let ind=arr.findIndex((e)=>e.name===data.name);
+                let xhr=new XMLHttpRequest();
+                xhr.open('POST', '/api/notes/edit', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send(`email=${info.email}&password=${info.password}`);
+                xhr.send(`newNote=${JSON.stringify(data)}&index=${ind}`);
                 xhr.onload=()=>{
                   let datas=JSON.parse(xhr.responseText);
                   if(datas.success){
-                    const {userProfileModel,data}=datas.extras;
-                    const {notes,tags,folders}=data;
-                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
-                    dispatch({type:'UPDATE',payload:{notes,tags,folders}});
+                    dispatch({type:'EDIT',payload:{data,ind},});
                     window.location.replace("#/user/Notes");
                   }
-                };*/
-                setTimeout(()=>{
-                  dispatch({type:'EDIT',payload:data});
+                };
+                /*setTimeout(()=>{
+                  dispatch({type:'EDIT',payload:{data,ind},});
                   window.location.replace("#/user/Notes");
-                },200);
+                },200);*/
               }
             }
             dispatch(asyncSetData());

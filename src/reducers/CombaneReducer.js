@@ -3,14 +3,12 @@ import {combineReducers} from 'redux'
 import tags from './TagsReducer'
 import notes from './NotesReducer'
 import folders from './FoldersReducer'
-import note from './CurrentNoteReducer'
 import user from './UserReducer'
 
 export default combineReducers({
     tags,
     notes,
     folders,
-    note,
     user,
 });
 /*

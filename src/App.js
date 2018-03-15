@@ -33,6 +33,8 @@ state={
     
  }
   render() {
+    /*if(!this.props.testStore.user || !this.props.testStore.user.email)
+        this.props.onCheck();*/
     return (
         <Wraper>
           <Router>
@@ -68,6 +70,7 @@ export default connect(
                 dispatch({type:'UPDATE',payload:{notes,tags,folders}});
               }
             };
+            window.location.replace("#/user/Notes");
             /*setTimeout(()=>{
               let data={};
               data=test;

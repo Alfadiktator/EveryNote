@@ -66,8 +66,9 @@ class Notes extends React.Component{
         <Wraper>
             <GridPlace id="gridplace">
                 <Label>Notes</Label>
-                {this.props.store.notes.map((elem)=>{
-                    return <Link to={`/user/Notes/${elem.name}`}><GridBlock data={elem}/></Link>
+                {this.props.store.notes && this.props.store.notes.map((elem,ind)=>{
+                    console.log('elem',elem);
+                    return <Link to={`/user/Notes/${elem.name}`}><GridBlock data={elem} ind={ind}/></Link>
                 })}
                 <WhiteSpace/>
             </GridPlace>
@@ -80,7 +81,6 @@ class Notes extends React.Component{
                                 place.style.display="none";
                         }
                         let elem=this.props.store.notes.find((elem)=>elem.name===tab);
-                        this.props.onCurChange(elem);
                         return <CreateNode data={elem}/>;
                 }}/>
             </Router>

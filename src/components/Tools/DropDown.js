@@ -64,7 +64,9 @@ export default class DropDown extends React.Component{
         if(e.id==='-'){
             but.innerHTML='Folders';
         }
-        but.innerHTML=e.id;
+        else{
+            but.innerHTML=e.id;
+        }
         this.drop();
     }
     drop(){

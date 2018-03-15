@@ -98,6 +98,10 @@ class Logon extends React.Component {
   </Wrap1>
     );
   }
+  componentDidMount(){
+    document.getElementById("EmailLogon").value="aaa@aaa.aaa";
+    document.getElementById("PasswordLogon").value="aaa@aaa.aaa";
+  }
 }
 
 export default Logon
