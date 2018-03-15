@@ -9,9 +9,7 @@ export default function update(state=[],action){
         case 'NOTE_CREATE':
             return [action.payload,...state];
         case 'DELETE_NOTE':
-            let ind=state.findIndex((e)=>e.name===action.payload);
-            console.log('DELETE_NOTE',action,ind);
-            state.splice(ind,1);
+            state.splice(action.payload,1);
             return [...state];
         case'EDIT':
             console.log(action);

@@ -136,7 +136,7 @@ class GridBlock extends React.Component{
     }
     onDel(e){
         e.preventDefault();
-        this.props.onDelete(this.state.name);
+        this.props.onDelete(this.state.ind);
     }
     onRep(e){
 
@@ -158,7 +158,6 @@ class GridBlock extends React.Component{
         );
     }
     componentWillReceiveProps(nextProps){
-        console.log(nextProps);
         let ind=nextProps.ind;
         let {label,desc,tags,folder,date,name}=nextProps.data;
         this.setState({
@@ -216,28 +215,24 @@ export default connect(
         store:state,
       }),
       dispatch => ({
-          
         onDelete:(data)=>{
             const asyncSetData= ()=>{
               return (dispatch)=>{
-              /*let xhr=new XMLHttpRequest();
-                xhr.open('POST', '/api/account/logon', false);
+                let xhr=new XMLHttpRequest();
+                xhr.open('POST', '/api/notes/delete', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send(`email=${info.email}&password=${info.password}`);
+                xhr.send(`index=${data}`);
                 xhr.onload=()=>{
                   let datas=JSON.parse(xhr.responseText);
                   if(datas.success){
-                    const {userProfileModel,data}=datas.extras;
-                    const {notes,tags,folders}=data;
-                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
-                    dispatch({type:'UPDATE',payload:{notes,tags,folders}});
-                    window.location.replace("#/user/Notes");
-                  }
-                };*/
-                setTimeout(()=>{
                     window.location.replace("#/user/Notes");
                     dispatch({type:'DELETE_NOTE',payload:data});
-                },200);
+                  }
+                };
+                /*setTimeout(()=>{
+                    window.location.replace("#/user/Notes");
+                    dispatch({type:'DELETE_NOTE',payload:data});
+                },200);*/
               }
             }
             dispatch(asyncSetData());
@@ -245,23 +240,10 @@ export default connect(
         onReport:(data)=>{
             const asyncSetData= ()=>{
               return (dispatch)=>{
-              /*let xhr=new XMLHttpRequest();
-                xhr.open('POST', '/api/account/logon', false);
+                let xhr=new XMLHttpRequest();
+                xhr.open('POST', '/api/notes/report', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send(`email=${info.email}&password=${info.password}`);
-                xhr.onload=()=>{
-                  let datas=JSON.parse(xhr.responseText);
-                  if(datas.success){
-                    const {userProfileModel,data}=datas.extras;
-                    const {notes,tags,folders}=data;
-                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
-                    dispatch({type:'UPDATE',payload:{notes,tags,folders}});
-                    window.location.replace("#/user/Notes");
-                  }
-                };*/
-                setTimeout(()=>{
-                    dispatch({type:'REPORT_NOTE',payload:data});
-                },200);
+                xhr.send(`index=${data}`);
               }
             }
             dispatch(asyncSetData());
