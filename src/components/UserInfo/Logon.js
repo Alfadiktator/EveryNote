@@ -33,6 +33,7 @@ width:100%;
 const Centrer=styled.div`
   display: flex;
   align-items: center;
+  width:70px;
   justify-content: left;
 `
 const LabelReg=styled.div`
@@ -54,16 +55,7 @@ class Logon extends React.Component {
     return (
     <Wrap1>
         <Wrap2>
-      <Form row>
-        <FormGroup>
-          <Label for="Email" hidden>Email</Label>
-          <Input type="email" name="email" id="EmailLogon" placeholder="king@example.com"/>
-        </FormGroup>
-        <FormGroup>
-          <Label for="Password" hidden>Password</Label>
-          <Input type="password" name="password" id="PasswordLogon" placeholder="Password..."/>
-        </FormGroup>
-        <Centrer><Button color="success" onClick={() =>{
+      <Form row onSubmit={() =>{
           let em=document.getElementById('EmailLogon').value.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
           let pas=document.getElementById('PasswordLogon').value;
           if(em && pas){
@@ -92,7 +84,16 @@ class Logon extends React.Component {
               },1000);
             }
           }
-        }}>Log on</Button></Centrer>
+        }}>
+        <FormGroup>
+          <Label for="Email" hidden>Email</Label>
+          <Input type="email" name="email" id="EmailLogon" placeholder="king@example.com"/>
+        </FormGroup>
+        <FormGroup>
+          <Label for="Password" hidden>Password</Label>
+          <Input type="password" name="password" id="PasswordLogon" placeholder="Password..."/>
+        </FormGroup>
+        <Centrer><Input style={{backgroundColor:'#28a745',color:'white'}} type='submit' color="success" value='Log on'/></Centrer>
       </Form>
      </Wrap2>
   </Wrap1>

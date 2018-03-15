@@ -47,6 +47,7 @@ background-repeat: no-repeat;
 margin:auto;
 `
 const Centrer=styled.div`
+  width:70px;
   display: flex;
   align-items: center;
   justify-content: left;
@@ -73,7 +74,13 @@ class Registration extends React.Component {
     <Wrap1>
         <Wrap2> 
         <LabelReg>First time with us?</LabelReg>  
-      <Form row onSubmit>
+      <Form row onSubmit={()=>{
+          if(document.getElementById('Email').value){
+            this.onSubmit(document.getElementById('1Name').value,
+            document.getElementById('2Name').value,document.getElementById('Email').value,document.getElementById('Password').value,
+            document.getElementById('Passwordconfirm').value)
+          }
+        }}>
       <FormGroup>
           <Label for="Firstname" hidden>First name</Label>
           <Input type="text" name="First name" id="1Name" placeholder="First name" />
@@ -84,7 +91,7 @@ class Registration extends React.Component {
         </FormGroup>
         <FormGroup>
           <Label for="Email" hidden>Email</Label>
-          <Input type="email" name="email" id="Email" placeholder="Email"  />
+          <Input type="email" name="email" id="Email" placeholder="Email"/>
         </FormGroup>
         <FormGroup>
           <Label for="Password" hidden>Password</Label>
@@ -94,9 +101,7 @@ class Registration extends React.Component {
           <Label for="Passwordconfirm" hidden>Password Confirm</Label>
           <Input type="password" name="passwordconfirm" id="Passwordconfirm" placeholder="Password Confirm"  />
         </FormGroup>
-        <Centrer><Input type='submit' color="success" onClick={() =>{this.onSubmit(document.getElementById('1Name').value,
-        document.getElementById('2Name').value,document.getElementById('Email').value,document.getElementById('Password').value,
-        document.getElementById('Passwordconfirm').value)}} value='Submit'/></Centrer>
+        <Centrer><Input style={{backgroundColor:'#28a745',color:'white'}} type='submit' color="success" value='Submit'/></Centrer>
       </Form>
      </Wrap2>
   </Wrap1>
