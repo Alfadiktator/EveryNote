@@ -73,30 +73,30 @@ class Registration extends React.Component {
     <Wrap1>
         <Wrap2> 
         <LabelReg>First time with us?</LabelReg>  
-      <Form row>
+      <Form row onSubmit>
       <FormGroup>
           <Label for="Firstname" hidden>First name</Label>
-          <Input type="text" name="First name" id="1Name" placeholder="First name" value="dfvfdv@dfvdfv.ru"/>
+          <Input type="text" name="First name" id="1Name" placeholder="First name" />
         </FormGroup>
         <FormGroup>
           <Label for="Lastname" hidden>Last name</Label>
-          <Input height="100px" type="text" name="Second name" id="2Name" placeholder="Second Name" value="dfvfdv@dfvdfv.ru"/>
+          <Input height="100px" type="text" name="Second name" id="2Name" placeholder="Second Name" />
         </FormGroup>
         <FormGroup>
           <Label for="Email" hidden>Email</Label>
-          <Input type="email" name="email" id="Email" placeholder="Email" value="dfvfdv@dfvdfv.ru"/>
+          <Input type="email" name="email" id="Email" placeholder="Email"  />
         </FormGroup>
         <FormGroup>
           <Label for="Password" hidden>Password</Label>
-          <Input type="password" name="password" id="Password" placeholder="Password" value="dfvfdv@dfvdfv.ru" />
+          <Input type="password" name="password" id="Password" placeholder="Password"   />
         </FormGroup>
         <FormGroup>
           <Label for="Passwordconfirm" hidden>Password Confirm</Label>
-          <Input type="password" name="passwordconfirm" id="Passwordconfirm" placeholder="Password Confirm" value="dfvfdv@dfvdfv.ru"/>
+          <Input type="password" name="passwordconfirm" id="Passwordconfirm" placeholder="Password Confirm"  />
         </FormGroup>
-        <Centrer><Button color="success" onClick={() =>{this.onSubmit(document.getElementById('1Name').value,
+        <Centrer><input type='submit' color="success" onClick={() =>{this.onSubmit(document.getElementById('1Name').value,
         document.getElementById('2Name').value,document.getElementById('Email').value,document.getElementById('Password').value,
-        document.getElementById('Passwordconfirm').value)}}>Submit</Button></Centrer>
+        document.getElementById('Passwordconfirm').value)}}>Submit</input></Centrer>
       </Form>
      </Wrap2>
   </Wrap1>

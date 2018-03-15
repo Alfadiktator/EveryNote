@@ -99,8 +99,8 @@ class Logon extends React.Component {
     );
   }
   componentDidMount(){
-    document.getElementById("EmailLogon").value="aaa@aaa.aaa";
-    document.getElementById("PasswordLogon").value="aaa@aaa.aaa";
+    document.getElementById("EmailLogon").value="skateray17@gmail.com";
+    document.getElementById("PasswordLogon").value="1234567";
   }
 }
 

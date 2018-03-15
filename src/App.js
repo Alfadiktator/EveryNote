@@ -27,7 +27,9 @@ state={
       pass:pass,
       passconf:passconf,
     }
-   }
+    console.log(info);
+    this.props.onRegistraition(info);
+  }
 
  ChangePassword=(newpass,pass,passconf) =>{
     
@@ -85,7 +87,7 @@ export default connect(
       onLogOn:(info)=>{
         const asyncGetData= ()=>{
           return (dispatch)=>{
-          let xhr=new XMLHttpRequest();
+        /*  let xhr=new XMLHttpRequest();
             xhr.open('POST', '/api/account/logon', false);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.onload=()=>{
@@ -103,7 +105,34 @@ export default connect(
                 window.location.replace("#/user/Notes");
               }
             };
-            xhr.send('email=${info.email}&password=${info.password}');
+            xhr.send(`email=${info.email}&password=${info.password}`);
+            */setTimeout(()=>{
+              let data={};
+              data=test;
+              dispatch({type:'GET_USER_INFO',payload:{email:"qwerty",firstname:"rew",secondname:"das"}});
+              dispatch({type:'UPDATE',payload:data});
+              window.location.replace("#/user/Notes");
+            },100);
+          }
+        }
+        dispatch(asyncGetData());
+      },
+      onRegistraition:(info)=>{
+        const asyncGetData= ()=>{
+          return (dispatch)=>{
+          let xhr=new XMLHttpRequest();
+            xhr.open('POST', '/api/account/register', false);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload=()=>{
+              let datas=JSON.parse(xhr.responseText);
+              console.log(datas);
+              if(datas.success){
+                const {userProfileModel}=datas.extras;
+                dispatch({type:'GET_USER_INFO',payload:userProfileModel});
+                window.location.replace("#/user/CreateNode");
+              }
+            };
+            xhr.send(`email=${info.email}&firstname=${info.name}&lastName =${info.name2}&password=${info.pass}&passwordConfirm=${info.passconf}`);
             /*setTimeout(()=>{
               let data={};
               data=test;

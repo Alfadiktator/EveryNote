@@ -8,7 +8,7 @@ const Wraper=styled.div`
     width:300px;
     height:200px;
     display:grid;
-    grid-template-columns:1fr;
+    grid-template-columns:300px;
     grid-template-rows: 40px 120px 40px;
     margin-bottom:10px;
 `
@@ -19,7 +19,7 @@ const Input=styled.input`
 `
 
 const Label=styled.div`
-    width:100%;
+    width:300px;
     box-shadow: 0 2px 0 0 #d7d8db, 0 0 0 2px #e3e4e8;
     padding:0 10px;
     display:grid;
@@ -30,7 +30,7 @@ const Label=styled.div`
     }
 `
 const Description=styled.div`
-    width:320px;
+    width:300px;
     overflow:hidden;
     box-shadow: 0 2px 0 0 #d7d8db, 0 0 0 2px #e3e4e8;
     font-weight:300;
@@ -103,12 +103,13 @@ const BottomInfo=styled.div`
 const NewReport=styled.div`
     position:absolute;
     padding:5px;
+    margin-top:50px;
     height:100px;
-    width:200px;
+    width:300px;
     display:none;
-    justify-content:center;
+    align-content:center;
     box-shadow: 0 2px 0 0 #d7d8db, 0 0 0 2px #e3e4e8;
-    grid-template-rows:40px 50px;
+    grid-template-rows:40px 30px;
     grid-gap:5px;
     z-index:1000;
     background-color:#fff;
@@ -117,6 +118,7 @@ const ButtonArea=styled.div`
     justify-self:end;
     aling-self:center;
     display:grid;
+    grid-gap:2px;
     grid-template-columns:1fr 1fr;
 `
 
@@ -163,19 +165,25 @@ class GridBlock extends React.Component{
         e.preventDefault();
         this.props.onDelete(this.state.ind);
     }
-    onRep(){
-        let block=document.getElementsByClassName("newReport")[this.state.ind];
-        if(block.style.display==='grid'){
-            block.style.display="none";
+    onRep(e){
+        e.preventDefault();
+        let block=document.getElementsByClassName("newReport");
+        for(let i=0;i<block.length;i++){
+            if(i!==this.state.ind && block[i].style.display==='grid'){
+                block[i].style.display='none';
+            }
+        }
+        if(block[this.state.ind].style.display==='grid'){
+            block[this.state.ind].style.display="none";
         }
         else{
-            block.style.display="grid";
+            block[this.state.ind].style.display="grid";
         }
     }
     render(){
         return(
             <Wraper>
-                <Label><Labelblock className='label'></Labelblock><Report onClick={this.onRep}/><Delete onClick={this.onDel}/>
+                <Label><Labelblock className='label'></Labelblock><Report title='report' onClick={this.onRep}/><Delete title='delete' onClick={this.onDel}/>
                     <NewReport className="newReport">
                         <Input type='email' placeholder="Email..." ref={(input) => { this.name = input; }}/>
                         <ButtonArea>
