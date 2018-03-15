@@ -10,8 +10,11 @@ export default function update(state=[],action){
             }
         break;
         case 'FOLDER_CREATE':
+        return [action.payload,...state];
         break;
         case 'FOLDER_DELETE':
+        state.splice(action.payload,1);
+        return [...state];
         break;
     }
     return state;

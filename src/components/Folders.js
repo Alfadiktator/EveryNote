@@ -201,6 +201,30 @@ export default connect(
         store:state,
       }),
       dispatch => ({
-
+        onCreate:(data)=>{
+            const asyncGetData= ()=>{
+              return (dispatch)=>{
+                let xhr=new XMLHttpRequest();
+                xhr.open('POST', '/api/folders/create', false);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onload=()=>{
+                  let datas=JSON.parse(xhr.responseText);
+                  if(datas.success){
+                    const {userProfileModel}=datas.extras;
+                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
+                  }
+                };
+                xhr.send(`folder=${data}`);
+                /*setTimeout(()=>{
+                  let data={};
+                  data=test;
+                  dispatch({type:'GET_USER_INFO',payload:{email:"qwerty",firstname:"rew",secondname:"das"}});
+                  dispatch({type:'UPDATE',payload:data});
+                  window.location.replace("#/user/Notes");
+                },100);*/
+              }
+            }
+            dispatch(asyncGetData());
+          },
       }),
 )(Tags)

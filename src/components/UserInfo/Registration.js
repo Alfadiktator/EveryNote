@@ -94,9 +94,9 @@ class Registration extends React.Component {
           <Label for="Passwordconfirm" hidden>Password Confirm</Label>
           <Input type="password" name="passwordconfirm" id="Passwordconfirm" placeholder="Password Confirm"  />
         </FormGroup>
-        <Centrer><input type='submit' color="success" onClick={() =>{this.onSubmit(document.getElementById('1Name').value,
+        <Centrer><Input type='submit' color="success" onClick={() =>{this.onSubmit(document.getElementById('1Name').value,
         document.getElementById('2Name').value,document.getElementById('Email').value,document.getElementById('Password').value,
-        document.getElementById('Passwordconfirm').value)}}>Submit</input></Centrer>
+        document.getElementById('Passwordconfirm').value)}} value='Submit'/></Centrer>
       </Form>
      </Wrap2>
   </Wrap1>
