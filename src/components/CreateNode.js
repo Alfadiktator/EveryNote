@@ -264,7 +264,6 @@ class CreateNode extends React.Component{
         }
     }
 }
-
 export default connect(
     state =>({
         store:state,
@@ -276,7 +275,6 @@ export default connect(
                 let xhr=new XMLHttpRequest();
                 xhr.open('POST', '/api/notes/create', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send(`note=${JSON.stringify(data)}`);
                 xhr.onload=()=>{
                   let datas=JSON.parse(xhr.responseText);
                   if(datas.success){
@@ -284,6 +282,7 @@ export default connect(
                     dispatch({type:'NOTE_CREATE',payload:data});
                   }
                 };
+                xhr.send(`note=${JSON.stringify(data)}`);
                 /*setTimeout(()=>{
                     window.location.replace("#/user/Notes");
                   dispatch({type:'NOTE_CREATE',payload:data});
@@ -301,7 +300,6 @@ export default connect(
                 let xhr=new XMLHttpRequest();
                 xhr.open('POST', '/api/notes/edit', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send(`newNote=${JSON.stringify(data)}&index=${ind}`);
                 xhr.onload=()=>{
                   let datas=JSON.parse(xhr.responseText);
                   if(datas.success){
@@ -309,6 +307,7 @@ export default connect(
                     window.location.replace("#/user/Notes");
                   }
                 };
+                xhr.send(`newNote=${JSON.stringify(data)}&index=${ind}`);
                 /*setTimeout(()=>{
                   dispatch({type:'EDIT',payload:{data,ind},});
                   window.location.replace("#/user/Notes");

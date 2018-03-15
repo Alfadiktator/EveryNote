@@ -60,7 +60,6 @@ export default connect(
             let xhr=new XMLHttpRequest();
             xhr.open('POST', '/api/account/getdata', false);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send();
             xhr.onload=()=>{
               let datas=JSON.parse(xhr.responseText);
               if(datas.success){
@@ -70,6 +69,7 @@ export default connect(
                 dispatch({type:'UPDATE',payload:{notes,tags,folders}});
               }
             };
+            xhr.send();
             window.location.replace("#/user/Notes");
             /*setTimeout(()=>{
               let data={};
@@ -85,7 +85,7 @@ export default connect(
       onLogOn:(info)=>{
         const asyncGetData= ()=>{
           return (dispatch)=>{
-          /*let xhr=new XMLHttpRequest();
+          let xhr=new XMLHttpRequest();
             xhr.open('POST', '/api/account/logon', false);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.onload=()=>{
@@ -103,15 +103,14 @@ export default connect(
                 window.location.replace("#/user/Notes");
               }
             };
-            xhr.send(email=${info.email}&password=${info.password});
-            */
-            setTimeout(()=>{
+            xhr.send('email=${info.email}&password=${info.password}');
+            /*setTimeout(()=>{
               let data={};
               data=test;
               dispatch({type:'GET_USER_INFO',payload:{email:"qwerty",firstname:"rew",secondname:"das"}});
               dispatch({type:'UPDATE',payload:data});
               window.location.replace("#/user/Notes");
-            },100);
+            },100);*/
           }
         }
         dispatch(asyncGetData());

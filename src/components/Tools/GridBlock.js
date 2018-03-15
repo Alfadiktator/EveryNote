@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {connect} from 'react-redux';
 import {markdown} from 'markdown';
+import {Button} from 'reactstrap';
 
 const Wraper=styled.div`
     width:300px;
@@ -10,6 +11,11 @@ const Wraper=styled.div`
     grid-template-columns:1fr;
     grid-template-rows: 40px 120px 40px;
     margin-bottom:10px;
+`
+const Input=styled.input`
+    outline:none;
+    border:0;
+    border-bottom:2px solid grey;
 `
 
 const Label=styled.div`
@@ -94,6 +100,25 @@ const BottomInfo=styled.div`
         color:#fff;
     }
 `
+const NewReport=styled.div`
+    position:absolute;
+    padding:5px;
+    height:100px;
+    width:200px;
+    display:none;
+    justify-content:center;
+    box-shadow: 0 2px 0 0 #d7d8db, 0 0 0 2px #e3e4e8;
+    grid-template-rows:40px 50px;
+    grid-gap:5px;
+    z-index:1000;
+    background-color:#fff;
+`
+const ButtonArea=styled.div`
+    justify-self:end;
+    aling-self:center;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+`
 
 const DateBlock=styled.div`
     font-size:13px;
@@ -138,13 +163,27 @@ class GridBlock extends React.Component{
         e.preventDefault();
         this.props.onDelete(this.state.ind);
     }
-    onRep(e){
-
+    onRep(){
+        let block=document.getElementsByClassName("newReport")[this.state.ind];
+        if(block.style.display==='grid'){
+            block.style.display="none";
+        }
+        else{
+            block.style.display="grid";
+        }
     }
     render(){
         return(
             <Wraper>
-                <Label><Labelblock className='label'></Labelblock><Report onClick={this.onRep}/><Delete onClick={this.onDel}/></Label>
+                <Label><Labelblock className='label'></Labelblock><Report onClick={this.onRep}/><Delete onClick={this.onDel}/>
+                    <NewReport className="newReport">
+                        <Input type='email' placeholder="Email..." ref={(input) => { this.name = input; }}/>
+                        <ButtonArea>
+                            <Button padding="2px" grid-area="button" color="info" onClick={()=>{return console.log('Me')}}>Me</Button>
+                            <Button padding="2px" grid-area="button" color="success" onClick={()=>{return console.log('Report')}}>Report</Button>
+                        </ButtonArea>
+                    </NewReport>
+                </Label>
                 <Description className='desc'></Description>
                 <BottomInfo>
                 <TagsArea>
@@ -221,7 +260,6 @@ export default connect(
                 let xhr=new XMLHttpRequest();
                 xhr.open('POST', '/api/notes/delete', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send(`index=${data}`);
                 xhr.onload=()=>{
                   let datas=JSON.parse(xhr.responseText);
                   if(datas.success){
@@ -229,6 +267,7 @@ export default connect(
                     dispatch({type:'DELETE_NOTE',payload:data});
                   }
                 };
+                xhr.send(`index=${data}`);
                 /*setTimeout(()=>{
                     window.location.replace("#/user/Notes");
                     dispatch({type:'DELETE_NOTE',payload:data});
