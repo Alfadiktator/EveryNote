@@ -159,7 +159,7 @@ class GridBlock extends React.Component{
             }
         }
         this.onDel=this.onDel.bind(this);
-        this.onRep=this.onRep.bind(this);
+        this.dropDownReportMenu=this.dropDownReportMenu.bind(this);
         this.reportNote=this.reportNote.bind(this);
         this.reportMe=this.reportMe.bind(this);
         this.name="";
@@ -168,7 +168,7 @@ class GridBlock extends React.Component{
         e.preventDefault();
         this.props.onDelete(this.state.ind);
     }
-    onRep(e){
+    dropDownReportMenu(e){
         e.preventDefault();
         let block=document.getElementsByClassName("newReport");
         for(let i=0;i<block.length;i++){
@@ -185,13 +185,14 @@ class GridBlock extends React.Component{
     }
     reportMe(e){
         e.preventDefault();
-        this.onRep({index:this.state.ind,email:this.props.store.user.email});
+        this.props.onReport({index:this.state.ind,email:this.props.store.user.email});
+        this.dropDownReportMenu(e);
     }
     reportNote(e){
         e.preventDefault();
         let email=this.name;
         if(email.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)){
-            this.onRep({index:this.state.ind,email});
+            this.props.onReport({index:this.state.ind,email});
         }
         else{
             let elem=document.getElementsByClassName("newReport")[this.state.ind];
@@ -200,13 +201,14 @@ class GridBlock extends React.Component{
                 elem.style.border="0";
             },50);
         }
+        this.dropDownReportMenu(e);
     }
     render(){
         return(
             <Wraper>
-                <Label><Labelblock className='label'></Labelblock><Report title='report' onClick={this.onRep}/><Delete title='delete' onClick={this.onDel}/>
+                <Label><Labelblock className='label'></Labelblock><Report title='report' onClick={this.dropDownReportMenu}/><Delete title='delete' onClick={this.onDel}/>
                     <NewReport className="newReport">
-                        <Input type='email' placeholder="Email..." onChange={(e)=>this.name=e.currentTarget.value}/>
+                        <Input type='email' placeholder="Email..." onChange={(el)=>this.name=el.currentTarget.value}/>
                         <ButtonArea>
                             <Button padding="2px" grid-area="button" color="info" onClick={this.reportMe}>Me</Button>
                             <Button padding="2px" grid-area="button" color="success" onClick={this.reportNote}>Report</Button>
