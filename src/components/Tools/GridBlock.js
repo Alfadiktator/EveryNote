@@ -160,6 +160,9 @@ class GridBlock extends React.Component{
         }
         this.onDel=this.onDel.bind(this);
         this.onRep=this.onRep.bind(this);
+        this.reportNote=this.reportNote.bind(this);
+        this.reportMe=this.reportMe.bind(this);
+        this.name="";
     }
     onDel(e){
         e.preventDefault();
@@ -180,15 +183,33 @@ class GridBlock extends React.Component{
             block[this.state.ind].style.display="grid";
         }
     }
+    reportMe(e){
+        e.preventDefault();
+        this.onRep({index:this.state.ind,email:this.props.store.user.email});
+    }
+    reportNote(e){
+        e.preventDefault();
+        let email=this.name;
+        if(email.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)){
+            this.onRep({index:this.state.ind,email});
+        }
+        else{
+            let elem=document.getElementsByClassName("newReport")[this.state.ind];
+            elem.style.border="1px solid red";
+            setTimeout(()=>{
+                elem.style.border="0";
+            },50);
+        }
+    }
     render(){
         return(
             <Wraper>
                 <Label><Labelblock className='label'></Labelblock><Report title='report' onClick={this.onRep}/><Delete title='delete' onClick={this.onDel}/>
                     <NewReport className="newReport">
-                        <Input type='email' placeholder="Email..." ref={(input) => { this.name = input; }}/>
+                        <Input type='email' placeholder="Email..." onChange={(e)=>this.name=e.currentTarget.value}/>
                         <ButtonArea>
-                            <Button padding="2px" grid-area="button" color="info" onClick={()=>{return console.log('Me')}}>Me</Button>
-                            <Button padding="2px" grid-area="button" color="success" onClick={()=>{return console.log('Report')}}>Report</Button>
+                            <Button padding="2px" grid-area="button" color="info" onClick={this.reportMe}>Me</Button>
+                            <Button padding="2px" grid-area="button" color="success" onClick={this.reportNote}>Report</Button>
                         </ButtonArea>
                     </NewReport>
                 </Label>
@@ -290,7 +311,7 @@ export default connect(
                 let xhr=new XMLHttpRequest();
                 xhr.open('POST', '/api/notes/report', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send(`index=${data}`);
+                xhr.send(`index=${data.index}&email=${data.email}`);
               }
             }
             dispatch(asyncSetData());

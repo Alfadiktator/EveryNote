@@ -69,7 +69,6 @@ export default connect(
                 const {notes,tags,folders}=data;
                 dispatch({type:'GET_USER_INFO',payload:userProfileModel});
                 dispatch({type:'UPDATE',payload:{notes,tags,folders}});
-                window.location.replace("#/user/Notes");
               }
             };
             xhr.send();

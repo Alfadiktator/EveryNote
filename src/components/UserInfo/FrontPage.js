@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Registration from './Registration';
 import Logon from './Logon';
+import {connect} from 'react-redux';
 
 const Wraper=styled.div`
     width:100vw;
@@ -44,9 +45,18 @@ class FrontPage extends React.Component {
       this.onLogOn=props.onLogOn;
     }
     render() {
+        if(this.props.store.user && this.props.store.user.email){
+            window.location.replace('#/user/Notes');
+        }
         return (
            <Wraper><Logo/><Image/><Registration onSubmit={this.onSubmit}></Registration><Logon onLogOn={this.onLogOn}></Logon></Wraper>
         )
       }
 }
-export default FrontPage
+export default connect(
+    state =>({
+      store:state,
+    }),
+    dispatch => ({
+    })
+)(FrontPage);

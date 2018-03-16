@@ -143,7 +143,7 @@ class ButtonMenu extends React.Component {
             width:75px;
             height:75px;
             background-size: contain;
-            background-image: url(https://www.evernote.com/redesign/business/BusinessHomeAction/letters/${this.props.store.user.firstname.substring(0,1).toLowerCase() || 'c'}_100px_1.png);
+            background-image: url(https://www.evernote.com/redesign/business/BusinessHomeAction/letters/${(this.props.store.user.firstName && this.props.store.user.firstName.substring(0,1).toLowerCase()) || 'c'}_100px_1.png);
             background-repeat: no-repeat;
             background-position:bottom;
             border-radius:100%;
