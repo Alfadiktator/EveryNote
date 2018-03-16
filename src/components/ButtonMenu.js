@@ -7,6 +7,7 @@ import Folders  from './Folders';
 import './Styles/Animation.css';
 import Tags  from './Tags';
 import {HashRouter as Router,Route,Switch,Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 const PLUSSRC="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAClUlEQVR42s2Yz0sbQRTH9+bZv6HnIu2liDalQqNSz0ILVoOn4opi0IBovai5lxa8KL14Vbx41JjEH4i2ohHBSKS9KI34s1BqTKbzWboSG2N2N5Nk3zKw7M6892Vm3nvf9zTNpgzvTz17vRoYbFrtX/Qu+0/rwl2pp6HODIN3vvGPOczVSiEf4/NVresf/I0r/sOGaK8Y2ZsSc0dRsXOREGfXV+ImkzYG73zjH3OYyxrWokMJmI6Nsbcvot0/2zfHRSi5ZRi2KswNJb8J1nqkDnQ5BhLcnq5uWQvMN6/0i6WTLVGsoANd6Ax+n662BWZo58sjT1iPD8QmxK/Ub6FK0IVOdGPDMpj6iH70KTEjMvJRLehENzYKgmIrQc+CUsvE4Zy8V3r8wePjfNnSUuzMfTsVkLawmdebuHQq74yVO4VN39fgm5w4g2ur8CYn3kdIuBOnCFzECqfStjFqDKfSvjkmwHALiGhK0HMqjxc6jOF4l6Rt73Lfj9vcRIi3E4FVA8L2y2iPGN6brNVIguSdYqRYQAgYwKKRmUmGlQYEBrBo0IWYzNCVBgQGsGhwGGhDpQGdSwy14fc32hNJrKxcaNzaNGx3WAkJYKhZ9GXKAuidjDOF5DqdEmBxzZGd/rkUYHHfpXad27suMLoudSBeFyTXV2ZyVUU/rLh2fvoxfpd+QI48biJolaaweQtICHegnCR/9wGSn10GfU7MlqUMeh7RDwpWsRRvdRH9mAWlKhTRjY2huNXqVU4EPVuqupRGp1FKWwWTfXyuaTb8732ef+2YJQftGNYY7ZhId7Kodsx9DSuiKSHebFjFLhMG00tLw/AZKATfzIYVc1mjtGGV09KT+Sa7pQftrFnwGeQqp6Vn5iYb8heRUjaIguwUDAAAAABJRU5ErkJggg==";
 const NOTESRC="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAACsUlEQVR42s1YMWsUQRQeYhQDqYLpUogJFrldG/MDBK1USLVFIHeziyD+AxvlFP+FpjQW9wNC8NwdEZEQ0qTxmrOUFEFrhcD5fbOXzR3Z7M7ezZgdeHDMvnnvuzcz33vzhKg4/G50y4vDZ34sP0AOvUQe+0n4h6J/Y47ftA50hZOh7s16n1qbcPgVjn96sXznfQ6bnmquNXafLIhOcIXC35zT36CjdbGGa2nDCha/23rgJ7Lnx+EXGH+knZuOQXsGYB5zLcD1aGtiIEudYA4AtmCoD3k49R+DDdqizaVvwVylxSs7wSLOwD4MbK+qYN7WztMWbdI2fZiDUdH3RiJfC0eDtumjFBRDSfQuwYxs4Uv6Ktw+T+mbsS3+09DbB58X36Y4/GHzzBieqf6dRN4/xzP6ahfcJj+J1vH9CDKoKEdcW3L7emM8ReIiV5SEdxIwGahC2+Q4kmcGiGxK0isGNJhGimzTN3T2stxEii9jYJeAyOjDlLQsmASZdwxuxJiDmyq8XiSVADFKzI/AInRmRjKsCshqhAgIGIgFjlBCfGyuXTogYCAWHqhjXUJUBGRbv7EbLEDvF7fsr0lJ4TpC+mDH8qQ2gFY7wTWNpS5bdltt3CCW+h3q2l17T01GjIU6qvW8alF/RoynqQOn3FaE0uphZE7JN8apI01uodXkOh6tEjD03x1Jri7KjwyQAZjc8mMYYmsFmtY3BZNXoKUG+CAM+5dRwtL3RYXSVm2K/NFnEOSVczCxfAHK2S99xeqHIs8TFjgFAx8rO5Hp6zVaJHpHT+n36VPaEMzY9tWl2ZBz+9J2DAisjNHPtWNIeqftGDVFOyavYUU2JcVD3iLsTWZoVnqi3Z65e/D0qi4hMMdv1Bnq7lltWOUkweWspYdyAfIbTk9YXKXtvbOWXpabKox/OnbP48EnSB8AAAAASUVORK5CYII=";
@@ -142,7 +143,7 @@ class ButtonMenu extends React.Component {
             width:75px;
             height:75px;
             background-size: contain;
-            background-image: url("https://www.evernote.com/redesign/business/BusinessHomeAction/letters/c_100px_1.png");
+            background-image: url(https://www.evernote.com/redesign/business/BusinessHomeAction/letters/${this.props.store.user.firstname.substring(0,1).toLowerCase() || 'c'}_100px_1.png);
             background-repeat: no-repeat;
             background-position:bottom;
             border-radius:100%;
@@ -195,11 +196,13 @@ class ButtonMenu extends React.Component {
                     </Center>
                 </ButtonWrap>
                 <WraperRoute id="wraperRoute" onClick={this.mayDown}>
+                <Router>
                 <Route path="/user/:tab" render={(props) =>{
                     console.log("route");
                     let {tab}=props.match.params;
                     return <Tab tab={tab} data={this.data}/>
                 }}/>
+                </Router>
                 </WraperRoute>
             </Wraper>
         )
@@ -215,5 +218,10 @@ const Tab =(props)=>{
     return <MyComponent data={props.data}/>;
 }
 
-
-export default ButtonMenu
+export default connect(
+    state =>({
+      store:state,
+    }),
+    dispatch => ({
+    })
+)(ButtonMenu);

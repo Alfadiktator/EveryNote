@@ -96,10 +96,6 @@ export default connect(
               if(datas.success){
                 const {userProfileModel,data}=datas.extras;
                 let {notes,tags,folders}=data;
-                notes = notes.map((el) => JSON.parse(el));
-                tags = tags.map((el) => JSON.parse(el));
-                folders = folders.map((el) => JSON.parse(el));
-                notes = notes.map((el) => {el.date = new Date(el.date); return el;});
                 dispatch({type:'GET_USER_INFO',payload:userProfileModel});
                 dispatch({type:'UPDATE',payload:{notes,tags,folders}});
                 window.location.replace("#/user/Notes");

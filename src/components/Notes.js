@@ -93,29 +93,5 @@ export default connect(
         store:state,
       }),
       dispatch => ({
-        onCurChange:(data)=>{
-            const asyncSetData= ()=>{
-              return (dispatch)=>{
-              /*let xhr=new XMLHttpRequest();
-                xhr.open('POST', '/api/account/logon', false);
-                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send(`email=${info.email}&password=${info.password}`);
-                xhr.onload=()=>{
-                  let datas=JSON.parse(xhr.responseText);
-                  if(datas.success){
-                    const {userProfileModel,data}=datas.extras;
-                    const {notes,tags,folders}=data;
-                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
-                    dispatch({type:'UPDATE',payload:{notes,tags,folders}});
-                    window.location.replace("#/user/Notes");
-                  }
-                };*/
-                setTimeout(()=>{
-                    dispatch({type:'UPDATE_FOCUS_NOTES',payload:data});
-                },200);
-              }
-            }
-            dispatch(asyncSetData());
-          },
       }),
 )(Notes)

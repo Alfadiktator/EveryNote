@@ -167,8 +167,8 @@ class CreateNode extends React.Component{
         else{
             note.folder=but.innerHTML;
         }
-        note.date=new Date().toUTCString().match(/,.+\d\d:/)[0];
-        note.date=note.date.substring(2,note.date.length-1);
+        note.date=new Date().toString().substring(4).match(/.+GMT/)[0];
+        note.date=note.date.substring(0,note.date.length-4);
         if(this.state.name){
             note.name=this.state.name;
             this.props.onEditNote(note,this.props.store.notes);

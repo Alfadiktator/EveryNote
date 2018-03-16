@@ -141,9 +141,9 @@ class Tags extends React.Component{
 
     onDel(e){
         e.preventDefault();
-        this.props.onDelete(e.currentTarget.index);
+        this.props.onDelete(e.currentTarget.index,this.props.store);
     }
-    
+
     render(){
         return(<Wraper>
                     <GridPlace id="gridplace">
@@ -179,12 +179,13 @@ class Tags extends React.Component{
 
 export default connect(
     state =>({
-        store:state
+        store:state,
       }),
       dispatch => ({
-        onDelete:(data)=>{
-            const asyncSetData= ()=>{
-              return (dispatch)=>{
+        onDelete:(data,store)=>{
+                const asyncSetData= ()=>{
+                return (dispatch)=>{
+                let info=store.tags[data].text;
                 let xhr=new XMLHttpRequest();
                 xhr.open('POST', '/api/tags/delete', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

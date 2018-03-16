@@ -181,10 +181,10 @@ class Folder extends React.Component{
      }
     createFolder(e){
         e.preventDefault();
-        this.dropFolderCreater();
         let label=document.getElementById('label');
-        console.log(label.value);
+        this.dropFolderCreater();
         this.props.onCreate(label.value);
+        label.value="";
      }
     render(){
         return(<Wraper>
@@ -252,7 +252,7 @@ export default connect(
             const asyncSetData= ()=>{
               return (dispatch)=>{
                 let xhr=new XMLHttpRequest();
-                xhr.open('POST', '/api/folders/delete', false);
+                xhr.open('POST', '/api/folders/create', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhr.onload=()=>{
                   let datas=JSON.parse(xhr.responseText);
