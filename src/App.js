@@ -122,7 +122,7 @@ export default connect(
           return (dispatch)=>{
           let xhr=new XMLHttpRequest();
             xhr.open('POST', '/api/account/register', false);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            //xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.onload=()=>{
               let datas=JSON.parse(xhr.responseText);
               console.log(datas);

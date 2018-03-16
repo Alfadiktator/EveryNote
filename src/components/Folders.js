@@ -75,9 +75,10 @@ const Grid=styled.div`
     box-shadow: 0 2px 0 0 #d7d8db, 0 0 0 2px #e3e4e8;
     display:grid;
     padding:2px;
-    align-content:center;
+    justify-content:center;
     grid-template-columns:1fr 30px;
     ${Grid}:hover{
+        grid-template-columns:30px 1fr 30px;
         background-color:#2dbe60;
     }
 `
@@ -137,19 +138,36 @@ const ButtonArea=styled.div`
     justify-self:end;
     aling-self:center;
 `
-class Tags extends React.Component{
+const Delete=styled.img`
+    width:24px;
+    height:24px;
+    content:url("https://www.evernote.com/redesign/global/js/focus/img/delete_white_24x24.png");
+    display:none;
+    ${Grid}:hover &{
+        display:block;
+    }
+    ${Delete}:hover{
+        content:url("https://www.evernote.com/redesign/global/js/focus/img/delete_solid_white_24x24.png");
+    }
+`
+
+class Folder extends React.Component{
     constructor(props){
         super(props);
         this.state={
             dropfolder:false,
         }
-        let {tags,notes,folders}=this.props.store;
-        this.tags=tags;
-        this.notes=notes;
-        this.folders=folders;
+        this.dropFolderCreater=this.dropFolderCreater.bind(this);
+        this.onDel=this.onDel.bind(this);
         this.createFolder=this.createFolder.bind(this);
     }
-    createFolder(){
+
+    onDel(e){
+        e.preventDefault();
+        this.props.onDelete(e.currentTarget.index);
+    }
+
+    dropFolderCreater(){
         let block=document.getElementById("newfolder");
         if(this.state.dropfolder){
             block.style.display="none";
@@ -161,29 +179,36 @@ class Tags extends React.Component{
             dropfolder:!this.state.dropfolder,
         })
      }
+    createFolder(e){
+        e.preventDefault();
+        this.dropFolderCreater();
+        let label=document.getElementById('label');
+        console.log(label.value);
+        this.props.onCreate(label.value);
+     }
     render(){
         return(<Wraper>
             <GridPlace id="gridplace">
-                <Label><LabelText>Folders</LabelText><NewFolderButton title="Create Folder" onClick={this.createFolder}/>
+                <Label><LabelText>Folders</LabelText><NewFolderButton title="Create Folder" onClick={this.dropFolderCreater}/>
                 <NewFolderBlock id="newfolder">
-                    <Input id="label" placeholder="Name..." ref={(input) => { this.name = input; }}/>
-                    <ButtonArea><Button padding="2px" grid-area="button" color="success" onClick={()=>{return console.log(1)}}>Create</Button></ButtonArea>
+                    <Input id="label" placeholder="Name..."/>
+                    <ButtonArea><Button padding="2px" color="success" onClick={this.createFolder}>Create</Button></ButtonArea>
                 </NewFolderBlock>
                 </Label>
-                {this.folders.map((elem)=>{
-                    return <Link to={`/user/Folder/${elem}`}><Grid><Text>{elem}</Text><FolderImg/></Grid></Link>;
+                {this.props.store.folders.map((elem,ind)=>{
+                    return <Link to={`/user/Folders/${elem}`}><Grid><Delete title='delete' onClick={this.onDel} index={ind}/><Text>{elem}</Text><FolderImg/></Grid></Link>;
                 })}
                 <WhiteSpace/>
             </GridPlace>
             <Router>
-            <Route path="/user/Folder/:tab" render={(props) =>{
+            <Route path="/user/Folders/:tab" render={(props) =>{
                     console.log('this',this);
                     let {tab}=props.match.params;
                     let place=document.getElementById("gridplace");
                     if( place &&(window.innerWidth <= 500 || window.innerHeight <= 500)){
                             place.style.display="none";
                     }
-                    let arr=this.notes.filter((elem)=>elem.folder===tab);
+                    let arr=this.props.store.notes.filter((elem)=>elem.folder===tab);
                     var matchgrid = document.getElementById("matchgrid");
                     return (<MatchGrid id="matchgrid">
                                 {arr.map((elem,ind)=>{
@@ -198,58 +223,52 @@ class Tags extends React.Component{
 
 export default connect(
     state =>({
-        store:state,
+        store:state
       }),
       dispatch => ({
-        onCreate:(data)=>{
-            const asyncGetData= ()=>{
+        onDelete:(data)=>{
+            const asyncSetData= ()=>{
               return (dispatch)=>{
                 let xhr=new XMLHttpRequest();
-                xhr.open('POST', '/api/folders/create', false);
+                xhr.open('POST', '/api/folders/delete', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhr.onload=()=>{
                   let datas=JSON.parse(xhr.responseText);
                   if(datas.success){
-                    const {userProfileModel}=datas.extras;
-                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
+                    dispatch({type:'FOLDER_DELETE',payload:data});
+                    window.location.replace("#/user/Folders");
                   }
                 };
-                xhr.send(`folder=${data}`);
+                xhr.send(`index=${data}`);
                 /*setTimeout(()=>{
-                  let data={};
-                  data=test;
-                  dispatch({type:'GET_USER_INFO',payload:{email:"qwerty",firstname:"rew",secondname:"das"}});
-                  dispatch({type:'UPDATE',payload:data});
-                  window.location.replace("#/user/Notes");
-                },100);*/
+                    dispatch({type:'FOLDER_DELETE',payload:data});
+                    window.location.replace("#/user/Folders");
+                },200);*/
               }
             }
-            dispatch(asyncGetData());
+            dispatch(asyncSetData());
           },
-          onDelete:(data)=>{
-            const asyncGetData= ()=>{
+          onCreate:(data)=>{
+            const asyncSetData= ()=>{
               return (dispatch)=>{
                 let xhr=new XMLHttpRequest();
-                xhr.open('POST', '/api/folders/create', false);
+                xhr.open('POST', '/api/folders/delete', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhr.onload=()=>{
                   let datas=JSON.parse(xhr.responseText);
                   if(datas.success){
-                    const {userProfileModel}=datas.extras;
-                    dispatch({type:'GET_USER_INFO',payload:userProfileModel});
+                    dispatch({type:'FOLDER_CREATE',payload:data});
+                    window.location.replace("#/user/Folders");
                   }
                 };
                 xhr.send(`folder=${data}`);
                 /*setTimeout(()=>{
-                  let data={};
-                  data=test;
-                  dispatch({type:'GET_USER_INFO',payload:{email:"qwerty",firstname:"rew",secondname:"das"}});
-                  dispatch({type:'UPDATE',payload:data});
-                  window.location.replace("#/user/Notes");
-                },100);*/
+                    dispatch({type:'FOLDER_CREATE',payload:data});
+                    window.location.replace("#/user/Folders");
+                },200);*/
               }
             }
-            dispatch(asyncGetData());
-          },
+            dispatch(asyncSetData());
+          }
       }),
-)(Tags)
+)(Folder)

@@ -12,7 +12,6 @@ export default function update(state=[],action){
             state.splice(action.payload,1);
             return [...state];
         case'EDIT':
-            console.log(action);
             state.splice(action.payload.ind,1);
             return[action.payload.data,...state];
     }

@@ -58,7 +58,7 @@ const LabelReg=styled.div`
   font-size:30px;
   font-weight:500;
   border-radius:3px;
-  @media (max-height: 700px) {
+  @media (max-height: 750px) {
     display:none;
   }
   `
@@ -68,19 +68,22 @@ class Registration extends React.Component {
   constructor(props){
     super(props);
     this.onSubmit=props.onSubmit;
+    this.submitFunction=this.submitFunction.bind(this);
+  }
+  submitFunction(e){
+      e.preventDefault();
+      if(document.getElementById('Email').value){
+        this.onSubmit(document.getElementById('1Name').value,
+        document.getElementById('2Name').value,document.getElementById('Email').value,document.getElementById('Password').value,
+        document.getElementById('Passwordconfirm').value);
+      }
   }
   render() {
     return (
     <Wrap1>
         <Wrap2> 
         <LabelReg>First time with us?</LabelReg>  
-      <Form row onSubmit={()=>{
-          if(document.getElementById('Email').value){
-            this.onSubmit(document.getElementById('1Name').value,
-            document.getElementById('2Name').value,document.getElementById('Email').value,document.getElementById('Password').value,
-            document.getElementById('Passwordconfirm').value)
-          }
-        }}>
+      <Form action='' row onSubmit={this.submitFunction}>
       <FormGroup>
           <Label for="Firstname" hidden>First name</Label>
           <Input type="text" name="First name" id="1Name" placeholder="First name" />

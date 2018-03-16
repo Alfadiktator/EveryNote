@@ -271,8 +271,8 @@ export default connect(
                 xhr.onload=()=>{
                   let datas=JSON.parse(xhr.responseText);
                   if(datas.success){
-                    window.location.replace("#/user/Notes");
                     dispatch({type:'DELETE_NOTE',payload:data});
+                    window.location.replace("#/user/Notes");
                   }
                 };
                 xhr.send(`index=${data}`);

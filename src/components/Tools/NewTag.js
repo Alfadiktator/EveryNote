@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import {Button} from 'reactstrap';
+import {connect} from 'react-redux';
 
 const Wraper=styled.div`
     width:100%;
@@ -83,25 +84,87 @@ const ButtonArea=styled.div`
 `
 
 function change(e){
-    let circle=document.getElementById("color_circle");
+    let circle=document.getElementById("colorCircle");
     let rgb=document.getElementsByClassName("rgb");
     circle.style.background=`rgb(${rgb[0].value},${rgb[1].value},${rgb[2].value})`
-    
+}
+class NewTag extends React.Component{
+    render(){
+        return(
+            <Wraper>
+                <Color id="colorCircle"/>
+                <Slide>
+                    <Input className="rgb" type="range" max="256" min="1"  color="red" onInput={change}/>
+                    <Input className="rgb" type="range" max="256" min="1"  color="green" onInput={change}/>
+                    <Input className="rgb" type="range" max="256" min="1"  color="blue" onInput={change}/>
+                </Slide>
+                <Title id="title" placeholder="Description..."/>
+                <ButtonArea><Button padding="2px" grid-area="button" color="success" onClick={(e)=>{
+                            let label=document.getElementById('title');
+                            if(!(label.value)){
+                                label.value="Description can not be empty";
+                                label.style.border="2px solid red";
+                                label.style.color="red";
+                                setTimeout(()=>{
+                                    label.value="";
+                                    label.style.color="black";
+                                    label.style.border="0";
+                                },1000);
+                                return;
+                            }
+                            else{
+                                let a=this.props.store.tags.findIndex((el)=>el.text===label.value);
+                                if(a!==-1){
+                                    let temp=label.value;
+                                    label.value="Tag with same description already exist";
+                                    label.style.border="2px solid blue";
+                                    label.style.color="blue";
+                                    setTimeout(()=>{
+                                        label.value=temp;
+                                        label.style.color="black";
+                                        label.style.border="0";
+                                    },1000);
+                                    return;
+                                }
+                                else{
+                                    let circle=document.getElementById('colorCircle');
+                                    this.props.onNewTag({text:label.value,color:circle.style.background});
+                                }
+                            }
+                            }
+                }>TODO</Button></ButtonArea>
+            </Wraper>
+        )
+    }
 }
 
-export default function(props){
-    let {tags}=props;
-    let {validateTag}=props;
-    return(
-        <Wraper>
-            <Color id="color_circle"/>
-            <Slide>
-                <Input className="rgb" type="range" max="256" min="1"  color="red" onInput={change}/>
-                <Input className="rgb" type="range" max="256" min="1"  color="green" onInput={change}/>
-                <Input className="rgb" type="range" max="256" min="1"  color="blue" onInput={change}/>
-            </Slide>
-            <Title id="title" placeholder="Description..."/>
-            <ButtonArea><Button padding="2px" grid-area="button" color="success" onClick={validateTag}>TODO</Button></ButtonArea>
-        </Wraper>
-    )
-}
+
+export default connect(
+    state =>({
+        store:state
+      }),
+      dispatch => ({
+        onNewTag:(data)=>{
+            const asyncSetData= ()=>{
+            return (dispatch)=>{
+                let xhr=new XMLHttpRequest();
+                xhr.open('POST', '/api/tags/create', false);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onload=()=>{
+                    let datas=JSON.parse(xhr.responseText);
+                    if(datas.success){
+                            dispatch({type:'TAG_CREATE',payload:data});
+                            window.location.replace("#/user/Tags");
+                    }
+                };
+                xhr.send(`tag=${JSON.stringify(data)}`);
+                /*setTimeout(()=>{
+                dispatch({type:'TAG_CREATE',payload:data});
+                window.location.replace("#/user/Tags");
+                },200);*/
+            }
+            }
+            dispatch(asyncSetData());
+            },
+        }),
+)(NewTag)

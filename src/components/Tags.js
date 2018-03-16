@@ -33,6 +33,7 @@ const GridPlace=styled.div`
     overflow-y:auto;
     padding:5px;
     justify-content:center;
+    align-content:center;
     grid-template-rows: 50px repeat(auto-fill,28px);
     grid-template-columns:1fr;
     grid-gap:3px;
@@ -73,13 +74,16 @@ const Tag=styled.div`
     z-index:100;
 `
 const Grid=styled.div`
-    width:100%;
+    width:194px;
     box-shadow: 0 2px 0 0 #d7d8db, 0 0 0 2px #e3e4e8;
     display:grid;
     padding:2px;
+    background-color:#fff;
     align-content:center;
-    grid-template-columns:30px 1fr;
+    margin:auto;
+    grid-template-columns:30px 1fr 30px;
     ${Grid}:hover{
+        z-index:10000;
         background-color:#2dbe60;
     }
 `
@@ -115,20 +119,37 @@ const NewTagButton=styled.div`
     background-image:url(https://www.evernote.com/redesign/global/js/focus/img/new_tag_grey.png);
 `
 
+const Delete=styled.img`
+    width:24px;
+    height:24px;
+    content:url("https://www.evernote.com/redesign/global/js/focus/img/delete_white_24x24.png");
+    display:none;
+    ${Grid}:hover &{
+        display:block;
+    }
+    ${Delete}:hover{
+        content:url("https://www.evernote.com/redesign/global/js/focus/img/delete_solid_white_24x24.png");
+    }
+`
+
 class Tags extends React.Component{
+
     constructor(props){
         super(props);
-        let {tags,notes,folders}=this.props.store;
-        this.tags=tags;
-        this.notes=notes;
-        this.folders=folders;
+        this.onDel=this.onDel.bind(this);
     }
+
+    onDel(e){
+        e.preventDefault();
+        this.props.onDelete(e.currentTarget.index);
+    }
+    
     render(){
         return(<Wraper>
                     <GridPlace id="gridplace">
                         <Label><LabelText>Tags</LabelText><Link to={`/user/Tags/NewTag`}><NewTagButton title="Create Tag"/></Link></Label>
-                        {this.tags.map((elem)=>{
-                            return <Link to={`/user/Tags/${elem.text}`}><Grid><Tag color={elem.color}/><Text>{elem.text}</Text></Grid></Link>;
+                        {this.props.store.tags.map((elem,ind)=>{
+                            return <Link to={`/user/Tags/${elem.text}`}><Grid><Tag color={elem.color}/><Text text={elem.text}>{elem.text.substring(0,13)}</Text><Delete title='delete' index={ind} onClick={this.onDel}/></Grid></Link>;
                         })}
                         <WhiteSpace/>
                     </GridPlace>
@@ -140,10 +161,10 @@ class Tags extends React.Component{
                                         place.style.display="none";
                                 }
                                 if(tab==="NewTag"){
-                                    return(<NewTag tags={this.tags}/>)
+                                    return(<NewTag tags={this.props.store.tags}/>)
                                 }
                                 else{
-                                    let arr=this.notes.filter((elem)=>elem.tags.findIndex((e)=>e.text===tab)!==-1);
+                                    let arr=this.props.store.notes.filter((elem)=>elem.tags.findIndex((e)=>e.text===tab)!==-1);
                                     var matchgrid = document.getElementById("matchgrid");
                                 return (<MatchGrid id="matchgrid">
                                     {arr.map((elem,ind)=>{
@@ -161,8 +182,27 @@ export default connect(
         store:state
       }),
       dispatch => ({
-        onCurChange:(data)=>{
-            dispatch({type:'UPDATE_FOCUS_NOTES',payload:data});
-        }
+        onDelete:(data)=>{
+            const asyncSetData= ()=>{
+              return (dispatch)=>{
+                let xhr=new XMLHttpRequest();
+                xhr.open('POST', '/api/tags/delete', false);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onload=()=>{
+                  let datas=JSON.parse(xhr.responseText);
+                  if(datas.success){
+                    dispatch({type:'DELETE_TAG',payload:data});
+                    window.location.replace("#/user/Tags");
+                  }
+                };
+                xhr.send(`index=${data}`);
+                /*setTimeout(()=>{
+                    window.location.replace("#/user/Tags");
+                    dispatch({type:'TAG_DELETE',payload:data});
+                },200);*/
+              }
+            }
+            dispatch(asyncSetData());
+          },
       }),
 )(Tags)

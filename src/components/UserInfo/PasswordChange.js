@@ -49,7 +49,7 @@ class PasswordChange extends React.Component {
       <Wrap1>
           <Wrap2> 
           <Logo></Logo>     
-        <Form row>
+        <Form row action=''>
         <FormGroup>
             <Label for="NewPassword" hidden>New Password</Label>
             <Input type="text" name="NewPassword" id="NewPassword" placeholder="New Password"/>

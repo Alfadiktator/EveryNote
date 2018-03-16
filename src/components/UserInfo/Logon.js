@@ -7,6 +7,7 @@ const Wrap1=styled.div`
 position:absolute;
 height:auto;
 width:400px;
+margin-bottom:10px;
 @media (max-width: 600px) {
     width:100%;
     left:0;
@@ -51,40 +52,43 @@ class Logon extends React.Component {
     this.onLogOn=props.onLogOn;
   }
 
+  submitFunction(e){
+    e.preventDefault();
+    let em=document.getElementById('EmailLogon').value.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+    let pas=document.getElementById('PasswordLogon').value;
+    if(em && pas){
+      this.onLogOn({
+        email:em[0],
+        password:pas,
+      })
+    }
+    else{
+      if(!em){
+        let el=document.getElementById('EmailLogon');
+        let temp=el.value;
+        el.value="Please,enter correct email";
+        el.style.color="red";
+        setTimeout(()=>{
+            el.value=temp;
+            el.style.color="black";
+        },1000);
+      }
+      else{
+        let el=document.getElementById('PasswordLogon');
+        el.value="Please,enter password";
+        el.style.color="red";
+        setTimeout(()=>{
+            el.value="";
+            el.style.color="black";
+        },1000);
+      }
+    }    
+  }
   render() {
     return (
     <Wrap1>
         <Wrap2>
-      <Form row onSubmit={() =>{
-          let em=document.getElementById('EmailLogon').value.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
-          let pas=document.getElementById('PasswordLogon').value;
-          if(em && pas){
-            this.onLogOn({
-              email:em[0],
-              password:pas})
-          }
-          else{
-            if(!em){
-              let el=document.getElementById('EmailLogon');
-              let temp=el.value;
-              el.value="Please,enter correct email";
-              el.style.color="red";
-              setTimeout(()=>{
-                  el.value=temp;
-                  el.style.color="black";
-              },1000);
-            }
-            else{
-              let el=document.getElementById('PasswordLogon');
-              el.value="Please,enter password";
-              el.style.color="red";
-              setTimeout(()=>{
-                  el.value="";
-                  el.style.color="black";
-              },1000);
-            }
-          }
-        }}>
+      <Form action='#' onSubmit={this.submitFunction.bind(this)}>
         <FormGroup>
           <Label for="Email" hidden>Email</Label>
           <Input type="email" name="email" id="EmailLogon" placeholder="king@example.com"/>

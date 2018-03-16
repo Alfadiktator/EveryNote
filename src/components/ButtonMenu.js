@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Button from './Tools/Button';
 import CreateNode from './CreateNode';
 import Notes from './Notes';
-import Folder  from './Folders';
+import Folders  from './Folders';
 import './Styles/Animation.css';
 import Tags  from './Tags';
 import {HashRouter as Router,Route,Switch,Link} from 'react-router-dom';
@@ -16,7 +16,7 @@ const FOLDERSRC="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhA
 const classList={
     CreateNode:CreateNode,
     Notes:Notes,
-    Folder:Folder,
+    Folders:Folders,
     Tags:Tags,
 };
 
@@ -185,7 +185,7 @@ class ButtonMenu extends React.Component {
                         <Link to="/user/CreateNode" onClick={this.mainMenuDrop}><Button content="Add note" imageSource={PLUSSRC} ></Button></Link>
                         <Link to="/user/Notes" onClick={this.mainMenuDrop}><Button content="Notes" imageSource={NOTESRC} ></Button></Link>
                         <Link to="/user/Tags" onClick={this.mainMenuDrop}><Button content="Tags" imageSource={TAGSSRC}></Button></Link>
-                        <Link to="/user/Folder" onClick={this.mainMenuDrop}><Button content="Folder" imageSource={FOLDERSRC}></Button></Link>
+                        <Link to="/user/Folders" onClick={this.mainMenuDrop}><Button content="Folders" imageSource={FOLDERSRC}></Button></Link>
                     </ButtonList>
                     <Center><this.usertag id="usersharm" onClick={()=>{
                         let elem = document.getElementById("usersharm");
