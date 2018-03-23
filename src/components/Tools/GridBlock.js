@@ -207,7 +207,7 @@ class GridBlock extends React.Component{
         return(
             <Wraper>
                 <Label><Labelblock className='label'></Labelblock><Report title='report' onClick={this.dropDownReportMenu}/><Delete title='delete' onClick={this.onDel}/>
-                    <NewReport className="newReport">
+                    <NewReport className="newReport" onClick={(e)=>e.preventDefault()}>
                         <Input type='email' placeholder="Email..." onChange={(el)=>this.name=el.currentTarget.value}/>
                         <ButtonArea>
                             <Button padding="2px" grid-area="button" color="info" onClick={this.reportMe}>Me</Button>
@@ -288,7 +288,7 @@ export default connect(
         onDelete:(data)=>{
             const asyncSetData= ()=>{
               return (dispatch)=>{
-                let xhr=new XMLHttpRequest();
+                /*let xhr=new XMLHttpRequest();
                 xhr.open('POST', '/api/notes/delete', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhr.onload=()=>{
@@ -298,11 +298,11 @@ export default connect(
                     window.location.replace("#/user/Notes");
                   }
                 };
-                xhr.send(`index=${data}`);
-                /*setTimeout(()=>{
-                    window.location.replace("#/user/Notes");
+                xhr.send(`index=${data}`);*/
+                setTimeout(()=>{
                     dispatch({type:'DELETE_NOTE',payload:data});
-                },200);*/
+                    window.location.replace("#/user/Notes");
+                },200);
               }
             }
             dispatch(asyncSetData());

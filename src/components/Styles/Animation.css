@@ -1,9 +1,9 @@
 @keyframes popAnima{
     0%   {
-      left:-100px;
+      top:-100px;
     }
     100%   {
-      left:0px;
+       top:0px;
     }
 }
 

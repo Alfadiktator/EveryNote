@@ -86,7 +86,7 @@ export default connect(
       onLogOn:(info)=>{
         const asyncGetData= ()=>{
           return (dispatch)=>{
-        /*  let xhr=new XMLHttpRequest();
+           let xhr=new XMLHttpRequest();
             xhr.open('POST', '/api/account/logon', false);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.onload=()=>{
@@ -101,13 +101,13 @@ export default connect(
               }
             };
             xhr.send(`email=${info.email}&password=${info.password}`);
-            */setTimeout(()=>{
+            /*setTimeout(()=>{
               let data={};
               data=test;
               dispatch({type:'GET_USER_INFO',payload:{email:"qwerty",firstname:"rew",secondname:"das"}});
               dispatch({type:'UPDATE',payload:data});
               window.location.replace("#/user/Notes");
-            },100);
+            },100);*/
           }
         }
         dispatch(asyncGetData());
@@ -128,7 +128,7 @@ export default connect(
               }
             };
             xhr.send(`email=${info.email}&firstname=${info.name}&lastName =${info.name2}&password=${info.pass}&passwordConfirm=${info.passconf}`);
-            /*setTimeout(()=>{
+           /* setTimeout(()=>{
               let data={};
               data=test;
               dispatch({type:'GET_USER_INFO',payload:{email:"qwerty",firstname:"rew",secondname:"das"}});

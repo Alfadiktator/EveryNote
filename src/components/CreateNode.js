@@ -53,7 +53,6 @@ const Description=styled.textarea`
 `
 
 const Tagarr=styled.div`
-    box-shadow: 0 2px 0 0 #d7d8db, 0 0 0 2px #e3e4e8;
     width:180px;
     height:100px;
     display:grid;
@@ -131,23 +130,23 @@ class CreateNode extends React.Component{
             }
     }
     createValidate(e){
+        let button
         let label= document.getElementById("label");
         let text= document.getElementById("text");
         if(!(label.value)){
             label.value="Labels can not be empty";
-            label.style.border="2px solid red";
+            label.style.borderBottom="2px solid red";
             label.style.color="red";
             setTimeout(()=>{
                 label.value="";
                 label.style.color="black";
-                label.style.border="0";
                 label.style.borderBottom="2px solid grey";
             },1000);
             return;
         }
         if(!(text.value)){
             text.value="Description can not be empty";
-            text.style.border="2px solid red";
+            text.style.borderBottom="2px solid red";
             text.style.color="red";
             setTimeout(()=>{
                 text.style.color="black";
@@ -285,7 +284,7 @@ export default connect(
                 xhr.send(`note=${JSON.stringify(data)}`);
                 /*setTimeout(()=>{
                     window.location.replace("#/user/Notes");
-                  dispatch({type:'NOTE_CREATE',payload:data});
+                    dispatch({type:'NOTE_CREATE',payload:data});
                 },200);*/
               }
             }
@@ -309,8 +308,8 @@ export default connect(
                 };
                 xhr.send(`newNote=${JSON.stringify(data)}&index=${ind}`);
                 /*setTimeout(()=>{
-                  dispatch({type:'EDIT',payload:{data,ind},});
-                  window.location.replace("#/user/Notes");
+                    dispatch({type:'EDIT',payload:{data,ind},});
+                    window.location.replace("#/user/Notes");
                 },200);*/
               }
             }

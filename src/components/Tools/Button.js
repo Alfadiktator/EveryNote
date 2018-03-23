@@ -1,19 +1,17 @@
 import React from 'react';
 import styled from 'styled-components'
-import '../Styles/Button.css';
 
-class Button extends React.Component {
-    constructor(props){
-      super(props);
-      this.ButtonBack=styled.a`
-        background-image:url(${props.imageSource});
-      `
-      this.content=props.content;
-    }
-    render() {
+const Li=styled.li`
+  width:36px;
+  height:36px;
+  background-image:url(${props=>props.src});
+  ${Li}:hover{
+    background-image:url(${props=>props.hover});
+  }
+`
+
+export default  function Button(props){
         return (
-            <li><this.ButtonBack className="round green"><span className="round">{this.content}</span></this.ButtonBack></li>
+            <Li key={props.content} title={props.content} src={props.imageSource} hover={props.imageHover}/>
         )
-      }
 }
-export default Button

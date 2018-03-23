@@ -133,23 +133,18 @@ const Delete=styled.img`
 `
 
 class Tags extends React.Component{
-
     constructor(props){
         super(props);
-        this.onDel=this.onDel.bind(this);
     }
-
-    onDel(e){
-        e.preventDefault();
-        this.props.onDelete(e.currentTarget.index,this.props.store);
-    }
-
     render(){
         return(<Wraper>
                     <GridPlace id="gridplace">
                         <Label><LabelText>Tags</LabelText><Link to={`/user/Tags/NewTag`}><NewTagButton title="Create Tag"/></Link></Label>
                         {this.props.store.tags.map((elem,ind)=>{
-                            return <Link to={`/user/Tags/${elem.text}`}><Grid><Tag color={elem.color}/><Text text={elem.text}>{elem.text.substring(0,13)}</Text><Delete title='delete' index={ind} onClick={this.onDel}/></Grid></Link>;
+                            return <Link to={`/user/Tags/${elem.text}`}><Grid><Tag color={elem.color}/><Text text={elem.text}>{elem.text.substring(0,13)}</Text><Delete title='delete' onClick={(e)=>{
+                                e.preventDefault();
+                                this.props.onDelete(ind,this.props.store);
+                            }}/></Grid></Link>;
                         })}
                         <WhiteSpace/>
                     </GridPlace>
@@ -185,8 +180,8 @@ export default connect(
         onDelete:(data,store)=>{
                 const asyncSetData= ()=>{
                 return (dispatch)=>{
-                let info=store.tags[data].text;
-                let xhr=new XMLHttpRequest();
+                    console.log(data,store);
+               /* let xhr=new XMLHttpRequest();
                 xhr.open('POST', '/api/tags/delete', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhr.onload=()=>{
@@ -196,11 +191,11 @@ export default connect(
                     window.location.replace("#/user/Tags");
                   }
                 };
-                xhr.send(`index=${data}`);
-                /*setTimeout(()=>{
-                    window.location.replace("#/user/Tags");
+                xhr.send(`index=${data}`);*/
+                setTimeout(()=>{
                     dispatch({type:'TAG_DELETE',payload:data});
-                },200);*/
+                    window.location.replace("#/user/Tags");
+                },200);
               }
             }
             dispatch(asyncSetData());

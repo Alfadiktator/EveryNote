@@ -158,13 +158,7 @@ class Folder extends React.Component{
             dropfolder:false,
         }
         this.dropFolderCreater=this.dropFolderCreater.bind(this);
-        this.onDel=this.onDel.bind(this);
         this.createFolder=this.createFolder.bind(this);
-    }
-
-    onDel(e){
-        e.preventDefault();
-        this.props.onDelete(e.currentTarget.index);
     }
 
     dropFolderCreater(){
@@ -179,6 +173,7 @@ class Folder extends React.Component{
             dropfolder:!this.state.dropfolder,
         })
      }
+
     createFolder(e){
         e.preventDefault();
         let label=document.getElementById('label');
@@ -186,6 +181,7 @@ class Folder extends React.Component{
         this.props.onCreate(label.value);
         label.value="";
      }
+     
     render(){
         return(<Wraper>
             <GridPlace id="gridplace">
@@ -196,7 +192,10 @@ class Folder extends React.Component{
                 </NewFolderBlock>
                 </Label>
                 {this.props.store.folders.map((elem,ind)=>{
-                    return <Link to={`/user/Folders/${elem}`}><Grid><Delete title='delete' onClick={this.onDel} index={ind}/><Text>{elem}</Text><FolderImg/></Grid></Link>;
+                    return <Link to={`/user/Folders/${elem}`}><Grid><Delete title='delete' onClick={(e)=>{
+                        e.preventDefault();
+                        this.props.onDelete(ind);
+                    }}/><Text>{elem}</Text><FolderImg/></Grid></Link>;
                 })}
                 <WhiteSpace/>
             </GridPlace>
@@ -229,7 +228,7 @@ export default connect(
         onDelete:(data)=>{
             const asyncSetData= ()=>{
               return (dispatch)=>{
-                let xhr=new XMLHttpRequest();
+                /*let xhr=new XMLHttpRequest();
                 xhr.open('POST', '/api/folders/delete', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhr.onload=()=>{
@@ -239,11 +238,11 @@ export default connect(
                     window.location.replace("#/user/Folders");
                   }
                 };
-                xhr.send(`index=${data}`);
-                /*setTimeout(()=>{
+                xhr.send(`index=${data}`);*/
+                setTimeout(()=>{
                     dispatch({type:'FOLDER_DELETE',payload:data});
                     window.location.replace("#/user/Folders");
-                },200);*/
+                },200);
               }
             }
             dispatch(asyncSetData());
@@ -251,7 +250,7 @@ export default connect(
           onCreate:(data)=>{
             const asyncSetData= ()=>{
               return (dispatch)=>{
-                let xhr=new XMLHttpRequest();
+                /*let xhr=new XMLHttpRequest();
                 xhr.open('POST', '/api/folders/create', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhr.onload=()=>{
@@ -261,11 +260,11 @@ export default connect(
                     window.location.replace("#/user/Folders");
                   }
                 };
-                xhr.send(`folder=${data}`);
-                /*setTimeout(()=>{
+                xhr.send(`folder=${data}`);*/
+                setTimeout(()=>{
                     dispatch({type:'FOLDER_CREATE',payload:data});
                     window.location.replace("#/user/Folders");
-                },200);*/
+                },200);
               }
             }
             dispatch(asyncSetData());

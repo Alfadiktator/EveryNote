@@ -99,16 +99,20 @@ class NewTag extends React.Component{
                     <Input className="rgb" type="range" max="256" min="1"  color="blue" onInput={change}/>
                 </Slide>
                 <Title id="title" placeholder="Description..."/>
-                <ButtonArea><Button padding="2px" grid-area="button" color="success" onClick={(e)=>{
+                <ButtonArea><Button padding="2px" grid-area="button" color="success" id="NewTagSubmit" onClick={(e)=>{
+                            let button=document.getElementById("NewTagSubmit");
+                            console.log('button',button);
                             let label=document.getElementById('title');
                             if(!(label.value)){
                                 label.value="Description can not be empty";
-                                label.style.border="2px solid red";
+                                label.style.borderBottom="2px solid red";
                                 label.style.color="red";
+                                button.disabled =true;
                                 setTimeout(()=>{
                                     label.value="";
                                     label.style.color="black";
                                     label.style.border="0";
+                                    button.disabled =false;
                                 },1000);
                                 return;
                             }
@@ -117,12 +121,14 @@ class NewTag extends React.Component{
                                 if(a!==-1){
                                     let temp=label.value;
                                     label.value="Tag with same description already exist";
-                                    label.style.border="2px solid blue";
+                                    label.style.borderBottom="2px solid blue";
                                     label.style.color="blue";
+                                    button.disabled =true;
                                     setTimeout(()=>{
                                         label.value=temp;
                                         label.style.color="black";
                                         label.style.border="0";
+                                        button.disabled =false;
                                     },1000);
                                     return;
                                 }
@@ -136,6 +142,13 @@ class NewTag extends React.Component{
             </Wraper>
         )
     }
+    componentDidMount(){
+        let place=document.getElementById("gridplace");
+        console.log('place',place);
+        if( place &&(window.innerWidth <= 500 || window.innerHeight <= 500)){
+                place.style.display="none";
+        }
+    }
 }
 
 
@@ -147,7 +160,7 @@ export default connect(
         onNewTag:(data)=>{
             const asyncSetData= ()=>{
             return (dispatch)=>{
-                let xhr=new XMLHttpRequest();
+               /* let xhr=new XMLHttpRequest();
                 xhr.open('POST', '/api/tags/create', false);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhr.onload=()=>{
@@ -157,11 +170,11 @@ export default connect(
                             window.location.replace("#/user/Tags");
                     }
                 };
-                xhr.send(`tag=${JSON.stringify(data)}`);
-                /*setTimeout(()=>{
-                dispatch({type:'TAG_CREATE',payload:data});
-                window.location.replace("#/user/Tags");
-                },200);*/
+                xhr.send(`tag=${JSON.stringify(data)}`);*/
+                setTimeout(()=>{
+                    dispatch({type:'TAG_CREATE',payload:data});
+                    window.location.replace("#/user/Tags");
+                },200);
             }
             }
             dispatch(asyncSetData());
